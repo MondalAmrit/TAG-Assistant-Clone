@@ -28,9 +28,6 @@ def get_dataset(limit =  None):
         reader = csv.reader(f)
         dataset = rephrase(list(reader)[:limit] if limit else list(reader))
     
-    # Replace #PROTOCOL_CODE# and #<intent>#
-    
-
     # Add Synthetic data generation
     if not (limit and len(dataset) < limit):
         dataset.extend(getSyntheticData())
@@ -48,24 +45,24 @@ def getSyntheticData():
     for l in locations:
         for p in prompts:
             # Text will not be displayed in this case as the results will be shown from the protocol
-            dataset.append([p+l,f"<INTENT> {protocol_map_str['WeatherProtocol']} {IntentMap['current forecast']} </INTENT><PARAMS> {l} </PARAMS><TEXT></TEXT>"])
+            dataset.append([p+l,f"<INTENT> {protocol_map_str['WeatherProtocol']} {IntentMap['current forecast']} </INTENT><PARAMS> location={l} </PARAMS>"])
 
     propmts = ['tell me the future forecast of ','future forecast of ','future weather condition in ']
     for l in locations:
         for p in prompts:
             # Text will not be displayed in this case as the results will be shown from the protocol
-            dataset.append([p+l,f"<INTENT> {protocol_map_str['WeatherProtocol']} {IntentMap['future forecast']} </INTENT><PARAMS> {l} </PARAMS><TEXT></TEXT>"])
+            dataset.append([p+l,f"<INTENT> {protocol_map_str['WeatherProtocol']} {IntentMap['future forecast']} </INTENT><PARAMS> location={l} </PARAMS>"])
 
     prompts = ['what is the weather condition at ', 'previous weather condition in ']
     for l in locations:
         for p in prompts:
             # Text will not be displayed in this case as the results will be shown from the protocol
-            dataset.append([p+l,f"<INTENT> {protocol_map_str['WeatherProtocol']} {IntentMap['previous forecast']} </INTENT><PARAMS> {l} </PARAMS><TEXT></TEXT>"])
+            dataset.append([p+l,f"<INTENT> {protocol_map_str['WeatherProtocol']} {IntentMap['previous forecast']} </INTENT><PARAMS> location={l} </PARAMS>"])
 
     prompts = ['get the co ordinates of ', 'co-ords of ','latitude and longitude of ','location of ']
     for l in locations:
         for p in prompts:
             # Text will not be displayed in this case as the results will be shown from the protocol
-            dataset.append([p+l,f"<INTENT> {protocol_map_str['WeatherProtocol']} {IntentMap['geo location']} </INTENT><PARAMS> {l} </PARAMS><TEXT></TEXT>"])
+            dataset.append([p+l,f"<INTENT> {protocol_map_str['WeatherProtocol']} {IntentMap['geo location']} </INTENT><PARAMS> location={l} </PARAMS>"])
 
     return dataset
