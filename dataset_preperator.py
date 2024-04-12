@@ -5,4 +5,4 @@ dataset = basic_chat_data() + weather_data()
 random.shuffle(dataset)
 
 print(len(dataset),"\n")
-pprint.pprint(dataset[:4])
+pprint.pprint(dataset[:8])

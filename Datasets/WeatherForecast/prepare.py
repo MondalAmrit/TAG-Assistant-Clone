@@ -33,36 +33,46 @@ def get_dataset(limit =  None):
         dataset.extend(getSyntheticData())
     return dataset
 
+def get_data(locations,prompts,intent):
+    dataset = []
+    for l in locations:
+        for p in prompts:
+            dataset.append([p+l,f"<INTENT> {protocol_map_str['WeatherProtocol']} {intent} </INTENT><PARAMS> location={l} </PARAMS>"])
+    return dataset
+
 def getSyntheticData():
     """
     Add Your Synthetic Data here and normal data in the csv file
     """
     dataset = []
 
-    locations = ['New Delhi','delhi','Mumbai','Kolkata','Chennai','Bangloore','Moscow','New York','Shanghai','Tokyo']
+    locations = ['New Delhi','delhi','Mumbai','Kolkata','Chennai','Bangloore','Moscow','New York','Shanghai','Tokyo',
+                 'Pune','Hyderabad','Islamabad','Dhaka','columbo','Australia','India','Spain','Morocco',
+                 'Paris','England','oslo','toronto']
+    
+    # Current forecast prompts
     prompts = ['What is the current weather at ', 'current weather status at ', 'present weather condition in ',
-               'weather at ']
-    for l in locations:
-        for p in prompts:
-            # Text will not be displayed in this case as the results will be shown from the protocol
-            dataset.append([p+l,f"<INTENT> {protocol_map_str['WeatherProtocol']} {IntentMap['current forecast']} </INTENT><PARAMS> location={l} </PARAMS>"])
+               'weather at ','weather situation at ','temperature at ','heat at ',
+               'temperature in celsius at ','temperature in fahrenheit at ',
+               'temperature in ','humidity at ','humidity in ','moisture at ',
+               'wind speed at ', 'Air Quality at ']
+    dataset.extend(get_data(locations,prompts,IntentMap['current forecast']))
 
-    propmts = ['tell me the future forecast of ','future forecast of ','future weather condition in ']
-    for l in locations:
-        for p in prompts:
-            # Text will not be displayed in this case as the results will be shown from the protocol
-            dataset.append([p+l,f"<INTENT> {protocol_map_str['WeatherProtocol']} {IntentMap['future forecast']} </INTENT><PARAMS> location={l} </PARAMS>"])
+    # Future forecast prompts
+    prompts = ['tell me the future forecast of ','future forecast of ','future weather condition in ',
+               'next 3 days weather report of ','tommorrow weather condition at ',
+               'tommorow temperature at ',]
+    dataset.extend(get_data(locations,prompts,IntentMap['future forecast']))
 
-    prompts = ['what is the weather condition at ', 'previous weather condition in ']
-    for l in locations:
-        for p in prompts:
-            # Text will not be displayed in this case as the results will be shown from the protocol
-            dataset.append([p+l,f"<INTENT> {protocol_map_str['WeatherProtocol']} {IntentMap['previous forecast']} </INTENT><PARAMS> location={l} </PARAMS>"])
+    # previous forecast prompts
+    prompts = ['what is the weather condition at ', 'previous weather condition in ', 'past weather records of ',
+               'previous 3 days weather report of ','yesterday weather at ','yesterday temperature at ',
+               'yesterday humidity at ']
+    dataset.extend(get_data(locations,prompts,IntentMap['previous forecast']))
 
-    prompts = ['get the co ordinates of ', 'co-ords of ','latitude and longitude of ','location of ']
-    for l in locations:
-        for p in prompts:
-            # Text will not be displayed in this case as the results will be shown from the protocol
-            dataset.append([p+l,f"<INTENT> {protocol_map_str['WeatherProtocol']} {IntentMap['geo location']} </INTENT><PARAMS> location={l} </PARAMS>"])
+    # geo location prompts
+    prompts = ['get the co ordinates of ', 'co-ords of ','latitude and longitude of ','location of ',
+               'geo location of ',]
+    dataset.extend(get_data(locations,prompts,IntentMap['geo location']))
 
     return dataset
