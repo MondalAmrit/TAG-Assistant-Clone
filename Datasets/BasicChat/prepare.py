@@ -1,5 +1,5 @@
 import csv
-def get_dataset(limit =  None):
+def get_dataset(limit = None):
     """
     Generates the dataset
     """
