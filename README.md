@@ -14,8 +14,14 @@ TAG - Task Automation via GPT
 User interacts with the AI using the chat. <br />
 Based on the user prompts the Ai will decide the response along with the protocol to run.
 
+# Installation and Usage
+For Installation setup refer [here](docs/installation.md) <br />
+For Usage setup refer [here](docs/usage.md) <br />
+**Note:** Installation is a one time setup and usage is to be done on every activation.
+
+
 # Current Version Features
-- [ ] Chat Interface
+- [x] Chat Interface
 - [ ] Internet Search
 - [ ] YouTube Search
 - [ ] Music Player
