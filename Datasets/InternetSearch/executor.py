@@ -1,7 +1,7 @@
-import webbrowser
+import webbrowser, urllib.parse
 
 def get_info(query):
-    query_page = "https://www.google.com/search?q=" + query
+    query_page = "https://www.google.com/search?q=" + urllib.parse.quote(query)
     webbrowser.open(query_page)
 
 def open_url(url):
@@ -9,11 +9,11 @@ def open_url(url):
     webbrowser.open(web_url)
 
 def get_image(query):
-    img_page = "https://www.google.com/search?q=" + query
+    img_page = "https://www.google.com/search?q=" + urllib.parse.quote(query)
     webbrowser.open(img_page)
 
-def get_product(product):
-    product_page = "https://www.amazon.in/s?k=" + product
+def get_product(query):
+    product_page = "https://www.amazon.in/s?k=" + urllib.parse.quote(query)
     webbrowser.open(product_page)
 
 functionMap = {

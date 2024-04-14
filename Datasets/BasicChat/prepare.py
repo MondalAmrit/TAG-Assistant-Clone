@@ -1,5 +1,5 @@
-import csv
-def get_dataset(limit = None):
+import csv, random
+def get_dataset(split = 0.9, limit = None):
     """
     Generates the dataset
     """
@@ -14,13 +14,17 @@ def get_dataset(limit = None):
     # Add Synthetic data generation
     if not (limit and len(dataset) < limit):
         dataset.extend(getSyntheticData())
-    return dataset
+    
+    split_idx = int(split*len(dataset))
+    random.shuffle(dataset)
+
+    return dataset[:split_idx], dataset[split_idx:]
 
 def generate_data(prompts, responses):
     dataset = []
     for prompt in prompts:  
         for response in responses:  
-            dataset.append([prompt, "<TEXT>" + response + "</TEXT>"])
+            dataset.append([prompt, "<TEXT> " + response + " </TEXT>"])
     return dataset    
 
 def getSyntheticData():
@@ -30,7 +34,8 @@ def getSyntheticData():
     dataset = []
 
     # Greetings
-    prompts = ["Hello", "Hi", "Hey", "Good day", "Greetings", "Howdy", "Salutations", "Yo", "What's up", "Bonjour"]
+    prompts = ["Hello", "Hi", "Hey", "Good day", "Greetings", "Howdy", "Salutations", "Yo", "What's up", "Bonjour",
+               "hello", "hi", "hey", 'good day', 'greetings', 'Good morning', 'good afternoon','good evening']
     responses = ["Hello! How can I help you today?", "Hi there! What would you like to talk about?",
                         "Hey! How may I assist you?", "Good day! How can I help you today?", 
                         "Greetings! What would you like to talk about?", "Howdy! How can I assist you?", 
@@ -154,5 +159,27 @@ def getSyntheticData():
         "I'm sorry, I'm not programmed to handle that request.","Let's try to stay on track with our conversation."
     ]
     dataset.extend(generate_data(prompts, responses))
+    # Out of Order
+    prompts = [
+        "That's not what I searched for.", "Could you please provide better results?",
+        "This isn't relevant to my query.", "I'm not sure what you're showing me.", "I need more accurate results.",
+        "Let's try a different search.", "Could you please refine the search?", "This doesn't match my expectations.",
+        "I'm having trouble finding what I'm looking for."
+    ]
+    responses = [
+        "I'm sorry, I'll try to improve the search results.", "Let me refine the search criteria.",
+        "I'll find better results for you.", "Apologies for the inconvenience, I'll adjust the search.",
+        "I'll make sure to provide more relevant results next time.", "Let's try another search query.",
+        "I'll work on getting more accurate results for you.", "I appreciate your feedback, I'll refine the search.",
+        "I understand, I'll find what you're looking for.", "I'll make the necessary adjustments to the search."
+    ]
+    dataset.extend(generate_data(prompts, responses))
     
+    prompts = [
+        "thanks", "Thanks", 'that helped me a lot. Thank you','Your sweet assistance made my day',
+    ]
+    responses = [
+        'Your Welcome','Is there anything I can help with?'
+    ]
+    dataset.extend(generate_data(prompts,responses))
     return dataset

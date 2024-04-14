@@ -4,6 +4,7 @@ from Datasets.InternetSearch import executor as InternetSearchProtocol
 from Datasets.YouTubeSearch import executor as YouTubeSearchProtocol
 from Datasets.MusicPlayer import executor as MusicPlayerProtocol
 from Datasets.WeatherForecast import executor as WeatherProtocol
+from Datasets.SystemControlProtocol import executor as SystemControlProtocol
 
 
 import pprint, inspect
@@ -13,6 +14,7 @@ protocol_map = {
     106 : YouTubeSearchProtocol,
     107 : MusicPlayerProtocol,
     108 : WeatherProtocol,
+    109 : SystemControlProtocol,
 }
 
 protocol_map_str = {
@@ -21,6 +23,7 @@ protocol_map_str = {
     'YouTubeSearchProtocol' : 106,
     'MusicPlayerProtocol' : 107,
     'WeatherProtocol' : 108,
+    'SystemControlProtocol' : 109,
 }
 
 def protocol_activator(Protocol_code, function_code, args = {}):

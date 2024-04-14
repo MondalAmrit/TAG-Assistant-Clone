@@ -1,4 +1,4 @@
-import csv, re
+import csv, re, random
 from protocol_activator import protocol_map_str
 
 IntentMap = {
@@ -18,7 +18,7 @@ def rephrase(l):
             i[1] = re.sub(k,str(v),i[1])
     return l
 
-def get_dataset(limit =  None):
+def get_dataset(split = 0.9, limit =  None):
     """
     Generates the dataset
     """
@@ -31,7 +31,10 @@ def get_dataset(limit =  None):
     # Add Synthetic data generation
     if not (limit and len(dataset) < limit):
         dataset.extend(getSyntheticData())
-    return dataset
+        
+    split_idx = int(split*len(dataset))
+    random.shuffle(dataset)
+    return dataset[:split_idx], dataset[split_idx:]
 
 def get_data(locations,prompts,intent):
     dataset = []

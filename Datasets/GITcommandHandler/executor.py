@@ -14,14 +14,19 @@ def gitInit():
     print("Running: git init")
     subprocess.run(['git', 'init'])
 
-def gitAdd(files):
+def gitAdd(files=None):
     # Add file(s) to the staging area
     # files: dot or file names
     print(f"Running: git add {' '.join(files)}")
-    subprocess.run(['git', 'add'] + files)
+    if files:
+        subprocess.run(['git', 'add'] + files)
+    else:
+        subprocess.run(['git','add','.'])
 
 def gitCommit(message):
     # Commit changes with a message
+    if not message:
+        message = 'minor changes'
     print(f"Running: git commit -m '{message}'")
     subprocess.run(['git', 'commit', '-m', message])
 

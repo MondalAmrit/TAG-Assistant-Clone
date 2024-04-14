@@ -5,7 +5,7 @@ https://www.weatherapi.com/my/
 
 """
 
-import os, requests
+import os, requests, pprint
 
 base_url = f"http://api.weatherapi.com/v1/"
 add_url = f".json?key={os.environ['weather_api']}"
@@ -69,3 +69,5 @@ functionMap = {
     4: get_future_forecast,
     5: get_astronomy,
 }
+
+# pprint.pprint(get_current('new delhi'))

@@ -4,7 +4,7 @@ from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 import screen_brightness_control, os, psutil
 
 # Volume Controls
-def setVolume(vol):
+def setVolume(qty, inc = None):
     # Increase volume --> + 10%
     # Decrease volume --> - 10%
     # Mute volume --> 0%
@@ -16,22 +16,28 @@ def setVolume(vol):
     volume = cast(interface, POINTER(IAudioEndpointVolume))
 
     prevVol = volume.GetMasterVolumeLevelScalar()
-    if not vol:
+    if not qty:
         print(f'Current Volume {prevVol*100:.0f}')
         return
-    volume.SetMasterVolumeLevelScalar(max(0,min(1,vol/100)), None)
+    if inc:
+        volume.SetMasterVolumeLevelScalar(max(0,min(1,(prevVol + qty)/100)), None)
+    else:
+        volume.SetMasterVolumeLevelScalar(max(0,min(1,qty/100)), None)
     currVol = volume.GetMasterVolumeLevelScalar()
     print(f'Increased Volume from {prevVol*100:.0f} to {currVol*100:.0f}')
     return None
 
 # Brightness Controls
-def setBrightness(qty):
+def setBrightness(qty, inc = None):
     # Increase, Decrease, Min, Max, None = get the brightness
     prevVal = screen_brightness_control.get_brightness()[0]
     if not qty:
         print(f'Current Brightness {prevVal}')
         return
-    screen_brightness_control.set_brightness(max(0,min(qty,100)))
+    if inc:
+        screen_brightness_control.set_brightness(max(0,min(prevVal+qty,100)))
+    else:
+        screen_brightness_control.set_brightness(max(0,min(qty,100)))
     currVal = screen_brightness_control.get_brightness()[0]
     print(f'Changed brightness from {prevVal} to {currVal} ')
     return None
@@ -119,7 +125,10 @@ def getCurrDateTime(inp_type = None):
 # Virtual Memory
 # Users ( in system )
 
-# setBrightness(42)
-# setVolume(72)
-# SystemDown('sleep')
-batteryStats()
+functionMap = {
+    1: setVolume,
+    2: setBrightness,
+    3: SystemDown,
+    4: batteryStats,
+    5: getCurrDateTime,
+}
