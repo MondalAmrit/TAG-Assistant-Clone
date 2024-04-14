@@ -1,0 +1,43 @@
+.main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.message-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 80%;
+    overflow: auto;
+    margin: 5.5rem 0;
+}
+
+.prompt-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.response-container {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.prompt,
+.response {
+    width: auto;
+    max-width: 50%;
+    padding: 10px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.prompt {
+    background-color: rgb(23, 98, 23);
+    border-top-left-radius: 8px;
+}
+
+.response {
+    background-color: rgb(98, 98, 98);
+    border-top-right-radius: 8px;
+}
