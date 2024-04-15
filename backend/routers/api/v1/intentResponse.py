@@ -9,7 +9,7 @@ class ArgsResponse(BaseModel):
 
 @router.post('/intentResponse',tags=['IntentResponse'])
 def generate_reponse(query: str):
-    return  {'result':'ok','response':'This endpoint will generate the reponses', 'input query':query}
+    return {'result':'ok','response':'This endpoint will generate the reponses', 'prompt':query}
 
 @router.post('/argsResponse')
 def args_response(resp: ArgsResponse):

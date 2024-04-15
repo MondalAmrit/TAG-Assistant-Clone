@@ -1,4 +1,4 @@
-import { Navbar, Main, Message } from "../../components";
+import { Navbar, Input } from "../../components";
 import { messages } from "../../dummyMessages";
 import "./chat.css";
 
@@ -11,18 +11,18 @@ const Chat = () => {
           <>
             <div className="prompt-container">
               <div className="prompt">
-                <Message message={message[0]} />
+                <p>{message[0]}</p>
               </div>
             </div>
             <div className="response-container">
               <div className="response">
-                <Message message={message[1]} />
+                <p>{message[1]}</p>
               </div>
             </div>
           </>
         ))}
       </div>
-      <Main />
+      <Input />
     </main>
   );
 };
