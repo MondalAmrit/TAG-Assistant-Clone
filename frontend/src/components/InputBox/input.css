@@ -29,13 +29,19 @@ input {
     letter-spacing: 0.4px;
 }
 
-.input-field span {
+.input-field button {
+    background-color: transparent;
+    border: none;
     position: absolute;
     top: 0.7rem;
-    right: 10.5rem;
     right: 11%;
+}
+
+.input-field span {
+    color: #fff;
     font-size: 1.6rem;
 }
+
 
 ::placeholder {
     color: #b9bdc2;
