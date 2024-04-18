@@ -140,9 +140,9 @@ def getSyntheticData():
                         "Minimalism and decluttering are trending lifestyle choices, with people embracing simplicity and mindful consumption.",
                         "DIY home improvement projects are trending, as people spend more time at home and look for ways to enhance their living spaces.",
                         "Mindfulness and meditation practices are gaining popularity, with apps and online resources offering guidance and support."]
-    all_prompts = jokes_prompts + facts_prompts + events_prompts + trends_prompts
-    all_responses = jokes_responses + facts_responses + events_responses + trends_responses
-    dataset.extend(generate_data(all_prompts, all_responses))
+    
+    for p,r in zip((jokes_prompts,facts_prompts,events_prompts,trends_prompts),(jokes_responses,facts_responses,events_responses,trends_responses)):
+        dataset.extend(generate_data(p,r))
 
     # Out of Order
     prompts = [

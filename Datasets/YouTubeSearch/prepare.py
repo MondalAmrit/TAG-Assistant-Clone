@@ -35,7 +35,12 @@ def get_dataset(split = 0.9, limit =  None):
 def generate_data(query):
     dataset = []
     for q in query:
-            dataset.append([q, f'<INTENT> {protocol_map_str["YouTubeSearchProtocol"]} {intentMap["SearchYoutube"]} </INTENT> <PARAMS> query={q} </PARAMS> <TEXT> Searching on YouTube </TEXT>'])
+            dataset.append([f'Search {q} on Youtube', f'<INTENT> {protocol_map_str["YouTubeSearchProtocol"]} {intentMap["SearchYoutube"]} </INTENT> <PARAMS> query={q} </PARAMS> <TEXT> Searching on YouTube </TEXT>'])
+            dataset.append([f'Search for {q} on YouTube', f'<INTENT> {protocol_map_str["YouTubeSearchProtocol"]} {intentMap["SearchYoutube"]} </INTENT> <PARAMS> query={q} </PARAMS> <TEXT> Searching on YouTube </TEXT>'])
+            dataset.append([f'Search {q} on YT', f'<INTENT> {protocol_map_str["YouTubeSearchProtocol"]} {intentMap["SearchYoutube"]} </INTENT> <PARAMS> query={q} </PARAMS> <TEXT> Searching on YouTube </TEXT>'])
+            dataset.append([f'Youtube search for {q}', f'<INTENT> {protocol_map_str["YouTubeSearchProtocol"]} {intentMap["SearchYoutube"]} </INTENT> <PARAMS> query={q} </PARAMS> <TEXT> Searching on YouTube </TEXT>'])
+            dataset.append([f'Youtube search on {q}', f'<INTENT> {protocol_map_str["YouTubeSearchProtocol"]} {intentMap["SearchYoutube"]} </INTENT> <PARAMS> query={q} </PARAMS> <TEXT> Searching on YouTube </TEXT>'])
+            dataset.append([f'Youtube search about {q}', f'<INTENT> {protocol_map_str["YouTubeSearchProtocol"]} {intentMap["SearchYoutube"]} </INTENT> <PARAMS> query={q} </PARAMS> <TEXT> Searching on YouTube </TEXT>'])
     return dataset
 
 
