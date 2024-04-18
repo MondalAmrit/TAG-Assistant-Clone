@@ -41,6 +41,10 @@ def generate_data(query):
             dataset.append([f'Youtube search for {q}', f'<INTENT> {protocol_map_str["YouTubeSearchProtocol"]} {intentMap["SearchYoutube"]} </INTENT> <PARAMS> query={q} </PARAMS> <TEXT> Searching on YouTube </TEXT>'])
             dataset.append([f'Youtube search on {q}', f'<INTENT> {protocol_map_str["YouTubeSearchProtocol"]} {intentMap["SearchYoutube"]} </INTENT> <PARAMS> query={q} </PARAMS> <TEXT> Searching on YouTube </TEXT>'])
             dataset.append([f'Youtube search about {q}', f'<INTENT> {protocol_map_str["YouTubeSearchProtocol"]} {intentMap["SearchYoutube"]} </INTENT> <PARAMS> query={q} </PARAMS> <TEXT> Searching on YouTube </TEXT>'])
+            dataset.append([f'search in youtube for {q}', f'<INTENT> {protocol_map_str["YouTubeSearchProtocol"]} {intentMap["SearchYoutube"]} </INTENT> <PARAMS> query={q} </PARAMS> <TEXT> Searching on YouTube </TEXT>'])
+            dataset.append([f'{q} in YouTube', f'<INTENT> {protocol_map_str["YouTubeSearchProtocol"]} {intentMap["SearchYoutube"]} </INTENT> <PARAMS> query={q} </PARAMS> <TEXT> Searching on YouTube </TEXT>'])
+            dataset.append([f'Videos of {q} from YouTube', f'<INTENT> {protocol_map_str["YouTubeSearchProtocol"]} {intentMap["SearchYoutube"]} </INTENT> <PARAMS> query={q} </PARAMS> <TEXT> Searching on YouTube </TEXT>'])
+            dataset.append([f'Youtube Playlists for {q}', f'<INTENT> {protocol_map_str["YouTubeSearchProtocol"]} {intentMap["SearchYoutube"]} </INTENT> <PARAMS> query={q} </PARAMS> <TEXT> Searching on YouTube </TEXT>'])
     return dataset
 
 
@@ -51,7 +55,6 @@ def getSyntheticData():
     dataset = []
     
     # Videos
-    
     queries = ["How to tie a tie", "Python tutorial", "Funny cat videos", "Healthy breakfast recipes", "Travel vlogs",
                "DIY home decor", "Latest movie trailers", "Workout routines", "Cake decorating ideas",
                "Photography tips", "Artificial intelligence explained", "Fashion trends", "Budget travel tips",

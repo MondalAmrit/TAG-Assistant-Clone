@@ -51,7 +51,9 @@ def getSyntheticData():
 
     locations = ['New Delhi','delhi','Mumbai','Kolkata','Chennai','Bangloore','Moscow','New York','Shanghai','Tokyo',
                  'Pune','Hyderabad','Islamabad','Dhaka','columbo','Australia','India','Spain','Morocco',
-                 'Paris','England','oslo','toronto']
+                 'Paris','England','oslo','toronto','Agra','Lucknow','Muzafar nagar','vijayawada','Guntur',
+                 'Vishakapatnam','Vellore','tirupati','jammu','kashmir','china','pakistan','egypt',
+                 'isarel','saudi arabia']
     
     # Current forecast prompts
     prompts = ['What is the current weather at ', 'current weather status at ', 'present weather condition in ',

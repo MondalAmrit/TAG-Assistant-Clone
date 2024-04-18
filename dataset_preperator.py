@@ -9,14 +9,15 @@ from Datasets.SystemControlProtocol.prepare import get_dataset as sys_control_da
 import pprint, csv
 data_list = [basic_chat_data(), weather_data(), git_data(), internet_data(), music_data(), yt_data(), sys_control_data()]
 
+
 dataset = {'train':[],'val':[]}
 for i in data_list:
     dataset['train'].extend(i[0])
     dataset['val'].extend(i[1])
 
 print(len(dataset['train']), len(dataset['val']),"\n")
-pprint.pprint(dataset['train'][:8])
-pprint.pprint(dataset['val'][:8])
+pprint.pprint(dataset['train'][:4])
+pprint.pprint(dataset['val'][:4])
 
 for i in ('train','val'):
     with open(f'C://users/Anirudh/Desktop/TAG_dataset_{i}.csv','w', newline='') as f:

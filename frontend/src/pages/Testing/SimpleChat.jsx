@@ -7,13 +7,27 @@ export default function SimpleChat() {
     ]);
     const [prompt, setPrompt] = useState('');
     const [bgClr, setBgClr] = useState('');
-    const sendMsg = () => {
+    const [generating, setGenerating] = useState(false);
+    const sendMsg = async () => {
         if (prompt === '') return ;
         let msgObj = {user: true, msg: prompt, time: Date.now()};
         setConversations((conversation) => [...conversation,msgObj]);
         setPrompt('');
 
         setBgClr(getRandomColor(shapesColors));
+
+        setGenerating(true);
+        // Send the message to backend
+        const res = await fetch('http://127.0.0.1:8000/api/v1/intentResponse',{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({'query': prompt})
+        }).then((resp) => resp.json()).then((resp) => resp['response']);
+        setGenerating(false);
+        msgObj = {user: false, msg: res, time: Date.now()};
+        setConversations((conversation) => [...conversation,msgObj]);
     }
     const shapesColors = ['10,10,210,','10,210,10','210,10,10','200,100,10','10,100,200','200,10,100'];
       
@@ -46,19 +60,27 @@ export default function SimpleChat() {
                 </div>
                 {/* Mid Chat Section */}
                 <div className="chatWrapper">
-                    {
-                        conversations.map((conversation, index) => {
-                            return(
-                                <div className="chatPosition"  key={index} style={conversation.user ? {justifyContent:'flex-end'}:{}}>
-                                    <div className="chatContainer" style={conversation.user ? {justifyContent:'flex-end',backgroundColor:'rgb(155 148 148 / 43%)'}:{}}>
-                                        <div className="chatMsgContainer">{conversation.msg}</div>
-                                        <div className="chatMsgTime">{conversation.time}</div>
-                                    </div>
+                    {conversations.map((conversation, index) => {
+                        return (
+                            <div className="chatPosition" key={index} style={conversation.user ? { justifyContent: 'flex-end' } : {}}>
+                                <div className="chatContainer" style={conversation.user ? { justifyContent: 'flex-end', backgroundColor: 'rgb(155 148 148 / 43%)' } : {}}>
+                                    <div className="chatMsgContainer">{conversation.msg}</div>
+                                    <div className="chatMsgTime">{conversation.time}</div>
                                 </div>
-                            )
-                        })
-                    }
+                            </div>
+                        );
+                    })}
+                    
+                    {/* Conditionally render the loading indicator */}
+                    {generating && (
+                        <div className="chatPosition">
+                            <div className="chatContainer">
+                                <div className="chatMsgContainer">Generating...</div>
+                            </div>
+                        </div>
+                    )}
                 </div>
+
                 {/* Bottom Input Box */}
                 <div className="bottomSection">
                     <input type="text" className="PromptInput" placeholder="Type here /" value={prompt} onKeyDown={(e) => {enterClicked(e.key);}} onChange={(e) => {setPrompt(e.target.value)}} />

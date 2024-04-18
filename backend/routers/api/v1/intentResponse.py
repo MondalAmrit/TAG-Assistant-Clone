@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
+from ...Model.get_model import model
 router = APIRouter()
 
 class ArgsResponse(BaseModel):
@@ -8,8 +9,8 @@ class ArgsResponse(BaseModel):
     value: str
 
 @router.post('/intentResponse',tags=['IntentResponse'])
-def generate_reponse(query: str):
-    return {'result':'ok','response':'This endpoint will generate the reponses', 'prompt':query}
+def generate_reponse(query: dict):
+    return {'result':'ok','response':model.generate(query['query']), 'prompt':query['query']}
 
 @router.post('/argsResponse')
 def args_response(resp: ArgsResponse):

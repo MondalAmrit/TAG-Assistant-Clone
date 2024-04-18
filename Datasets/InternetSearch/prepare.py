@@ -65,7 +65,8 @@ def getSyntheticData():
                 "the impact of automation on the future of work",    "the future of space tourism",    "the history of human rights movements",
                 "the cultural significance of traditional ceremonies", "the benefits of community gardening projects",
                 "the psychology of personality development","the impact of globalization on local economies", "the future of personalized medicine",
-                "the history of environmental conservation efforts", "the cultural significance of street art", "the benefits of collaborative research initiatives",]
+                "the history of environmental conservation efforts", "the cultural significance of street art", "the benefits of collaborative research initiatives",
+                "maths","physics","chemistry","sicence","computers","ecology","geography","data analytics","ai","llm","language models"]
     for p in info_prompts:
         for k in info_keys:
             dataset.append([p+k, f"<INTENT> {protocol_map_str['InternetSearchProtocol']} {IntentMap['information']} </INTENT> <PARAMS> query={p+k} </PARAMS> <TEXT> Searching the web... </TEXT>"])
@@ -86,20 +87,23 @@ def getSyntheticData():
 
     # image
     image_prompts = ["Give me an image of a ", "Image of a ", "Show me pictures of ", "Find me an image of a tropical ", "I need a picture of a mountain ", "Can you provide an image of a ", "I'm looking for pictures of ", "Image search: ", "Please show me photos of ", "Find an image related to "]
-    image_keys = ["cat", "sunset", "dogs", "tropical beach", "mountain landscape", "happy family", "famous landmarks", "beautiful flowers", "city skylines", "technology"]
+    image_keys = ["cat", "sunset", "dogs", "tropical beach", "mountain landscape", "happy family", "famous landmarks", "beautiful flowers", "city skylines", "technology",
+                  "human","rats","college","metro","flights","auto",'cab','car','comb','cost','country','currency','note','book']
     for p in image_prompts:
         for k in image_keys:
             dataset.append([p+k, f"<INTENT> {protocol_map_str['InternetSearchProtocol']} {IntentMap['image']} </INTENT> <PARAMS> query={p+k} </PARAMS> <TEXT> Generating image of {k}... </TEXT>"])
 
     # product
-    product_prompts = ["Show me ", "Tell me about ", "Can you provide details ", "Give me information about ", "Provide information about ", "Give me details about ", "Show me available ",
+    product_prompts = ["Show me ","Show me the products related to " , "Tell me about ", "Can you provide details ", "Give me information about ", "Provide information about ", "Give me details about ", "Show me available ",
                     "What are the options for ", "I'm interested in ", "Please display ", "Could you show me ", "I'd like to see ", "I'm looking for details on ",
-                    "Please provide info on ", "Can you show me ", "What's available for "]
+                    "Please provide info on ", "Can you show me ", "What's available for ", "Related products for ",
+                    "Product options for ",'Amazon search for ']
 
     product_keys = ["latest smartphones on the market", "designer handbags", "laptops", "sports shoes", "kitchen appliances", "luxury watches", "home decor items",
                     "gaming consoles", "fitness trackers", "skincare products", "smart home devices", "office chairs", "travel accessories", "headphones",
                     "outdoor furniture", "camera equipment", "pet supplies", "books", "gourmet food items", "fashion accessories", "DIY tools", "art supplies",
-                    "baby products", "musical instruments", "sporting goods", "car accessories", "gardening tools", "cooking utensils", "party supplies"]
+                    "baby products", "musical instruments", "sporting goods", "car accessories", "gardening tools", "cooking utensils", "party supplies",
+                    "samsung s20 ultra", 'IQOO Z6 lite','realme 9','realme 8i','xiaomi','redmi','poco','pocox2','Noise fit']
     for p in product_prompts:
         for k in product_keys:
             dataset.append([p+k, f"<INTENT> {protocol_map_str['InternetSearchProtocol']} {IntentMap['product']} </INTENT> <PARAMS> product={k} </PARAMS> <TEXT> Showing {k}... </TEXT> "])

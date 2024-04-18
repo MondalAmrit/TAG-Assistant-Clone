@@ -54,7 +54,7 @@ def get_data(commands, prompts, intent):
     dataset = []
     for command in commands:
         for prompt in prompts:
-            dataset.append([prompt + command, f"<INTENT> {protocol_map_str['GITCommandProtocol']} {IntentMap[intent]} </INTENT> <PARAMS> command={command} </PARAMS>"])
+            dataset.append([prompt.replace('#TKN#',command), f"<INTENT> {protocol_map_str['GITCommandProtocol']} {IntentMap[intent]} </INTENT> <PARAMS> command={command} </PARAMS>"])
     return dataset
 
 def getSyntheticData():
@@ -64,29 +64,32 @@ def getSyntheticData():
     dataset = []
 
     # Add Files to a repo
-    commands = ['file1.py', 'file2.py', 'file3.py', 'file4.py', 'file5.py']
-    prompts = ['Add file ', 'Stage file ', 'Include file ', 'Append file ', 
-               'Can you please add this file', "Why don't you add "]
+    commands = [f'file{i}.py' for i in range(20)] + ['file.py','sample.py','testing.txt','sample.txt']
+    prompts = ['Add file #TKN#', 'Stage file #TKN#', 'Include file #TKN#', 'Append file #TKN#', 
+               'Can you please add this file #TKN#', "Why don't you add #TKN#",
+               'Add #TKN# file to the repo', 'Add #TKN# file']
     dataset.extend(get_data(commands, prompts, 'add files'))
 
-    # 
-    branches = ['feature-branch', 'bug-fix-branch', 'hotfix-branch']
-    prompts = ['Create branch ', 'Make branch ', 'Establish branch ', 'Generate branch ',]
+    # Create new branch
+    branches = ['feature-branch', 'bug-fix-branch', 'hotfix-branch','test-branch','error-branch']
+    prompts = ['Create branch #TKN#', 'Make branch #TKN#', 'Establish branch #TKN#', 'Generate branch #TKN#',]
     projects= ['TAG','Protfolio','project A','project B','management tools','Somethings project']
-    prompts.extend([f'Can you create a new branch in {i} as ' for i in projects])
+    prompts.extend([f'Can you create a new branch in {i} as #TKN#' for i in projects])
     dataset.extend(get_data(branches, prompts, 'create branch'))
 
-    #
+    # For Remote
     remotes = ['origin', 'upstream', 'forked']
-    prompts = ['Add remote ', 'Include remote ', 'Connect remote ', 'Link remote ',
-               'Can you please add remote in github', "Why don't you add remote in github "]
+    prompts = ['Add remote #TKN#', 'Include remote #TKN#', 'Connect remote #TKN#', 'Link remote #TKN#',
+               'Can you please add remote in github #TKN#', "Why don't you add remote in github #TKN#",
+               "I think its better to add #TKN# to github", 'git remote #TKN#']
     dataset.extend(get_data(remotes, prompts, 'add remote'))
 
     #
     tags = ['v1.0', 'v2.0', 'release-1.0', 'beta-2.0']
-    prompts = ['Create tag ', 'Generate tag ', 'Label tag ', 'Mark tag ',
-               'Can you create a tag in github as ', 'create a tag  in github as ',
-               'create a new tag in github with name ']
+    prompts = ['Create tag #TKN#', 'Generate tag #TKN#', 'Label tag #TKN#', 'Mark tag #TKN#',
+               'Can you create a tag in github as #TKN#', 'create a tag  in github as #TKN#',
+               'create a new tag in github with name #TKN#', "Why don't you create a tag with name as #TKN#",
+               'create a #TKN# tag', 'make a #TKN# tag']
     dataset.extend(get_data(tags, prompts, 'create tag'))
 
     return dataset

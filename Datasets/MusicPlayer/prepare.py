@@ -94,7 +94,8 @@ def getSyntheticData():
         "Shallow", "Baby", "Cheap Thrills", "Closer", "I Will Always Love You",
         "Tere Bina", "Ae Dil Hai Mushkil", "Muskurane Ki Wajah", "Dil Diyan Gallan",
         "Teri Meri", "Gerua", "Tum Hi Ho Bandhu", "Galliyan", "Zara Zara",
-        "Tum Se Hi", "Chaiyya Chaiyya"
+        "Tum Se Hi", "Chaiyya Chaiyya", "Peaky blinders", "Billonera", "legends never die",
+        "Alone pt II", "Faded", 
     ]
     prompts_= [
         "How about playing", "Can you play", "Let's listen to", "I'd like to hear",

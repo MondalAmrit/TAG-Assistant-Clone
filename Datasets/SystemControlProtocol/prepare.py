@@ -54,54 +54,52 @@ def generate_single_data(lst,inp_type = None):
 def getSyntheticData():
     dataset = []
     # Volume
-    volume_levels = [0, 10, 20, 35, 30, 40, 50, 60, 70, 80, 90, 100]
+    volume_levels = [i for i in range(100)]
     prompts = ['can you set the volume to ', 'make the volume to ', 'put the volume at ',
-               'set the volume to ']
+               'set the volume to ','increase the volume by ','change the volume by ', 
+            'up the volume by ', 'decrease the volume by ','change the volume by ', 
+            'drop the volume by ','I think it is better to set the volume at ',
+            "why don't you leave the volume at ","volume "]
     dataset.extend(generate_data(volume_levels,prompts))
-    volume_levels = [0,10,20,30]
-    prompts = ['increase the volume by ','change the volume by ', 'up the volume by ']
-    dataset.extend(generate_data(volume_levels,prompts, inc = 'Y'))
-    volume_levels = [-10,-20,-30]
-    prompts = ['decrease the volume by ','change the volume by ', 'drop the volume by ']
-    dataset.extend(generate_data(volume_levels,prompts, inc = 'Y'))
 
     # Brightness
-    volume_levels = [0, 10, 20, 35, 30, 40, 50, 60, 70, 80, 90, 100]
     prompts = ['can you set the brightness to ', 'make the brightness to ', 'put the brightness at ',
-               'set the brightness to ']
+               'set the brightness to ',
+               'increase the brightness by ','change the brightness by ', 'up the brightness by ',
+               'decrease the brightness by ','change the brightness by ', 'drop the brightness by ',
+               'I think it is better to set the brightness at ', "Why don't you set the brightness at ", "brightness "]
     dataset.extend(generate_data(volume_levels,prompts, generate_type='brightness'))
-    volume_levels = [0,10,20,30]
-    prompts = ['increase the brightness by ','change the brightness by ', 'up the brightness by ']
-    dataset.extend(generate_data(volume_levels,prompts, generate_type='brightness', inc = 'Y'))
-    volume_levels = [-10,-20,-30]
-    prompts = ['decrease the brightness by ','change the brightness by ', 'drop the brightness by ']
-    dataset.extend(generate_data(volume_levels,prompts, generate_type='brightness', inc = 'Y'))
 
     # System Down
     prompts = [
         "Shut down the system", "Turn off the computer", "Power off the PC",
         "Shutdown the device", "Switch off the machine", "Close down the system",
         "Turn off the device", "Power off the computer", "Shutdown the PC",
-        "Turn off the laptop", "Shutdown the laptop", "Power off the laptop"
+        "Turn off the laptop", "Shutdown the laptop", "Power off the laptop",
+        "I said Shut down the system", "Simply Shutdown", "shutdown","shut down",
+        "Just shut down", "Just shutdown",
     ]
     for i in prompts:
         dataset.append([i,f'<INTENT> {protocol_map_str["SystemControlProtocol"]} 3 </INTENT> <PARAMS> method=shutdown </PARAMS> <TEXT> Shutting Down </TEXT>'])
     prompts = [
         "Put the system to sleep", "Hibernate the computer", "Sleep the PC",
         "Put the computer to sleep", "Sleep the device", "Hibernate the PC",
-        "Put the machine to sleep", "Hibernate the device"
+        "Put the machine to sleep", "Hibernate the device", "Just put it to sleep",
+        "Why don't you sleep", "Sleep",
     ]
     for i in prompts:
         dataset.append([i,f'<INTENT> {protocol_map_str["SystemControlProtocol"]} 3 </INTENT> <PARAMS> method=sleep </PARAMS> <TEXT> Sleeping </TEXT>'])
     prompts = [
         "Restart the system", "Reboot the computer", "Restart the PC",
-        "Restart the device", "Reboot the machine", "Restart the laptop"
+        "Restart the device", "Reboot the machine", "Restart the laptop",
+        "Reboot","Restart system",
     ]
     for i in prompts:
         dataset.append([i,f'<INTENT> {protocol_map_str["SystemControlProtocol"]} 3 </INTENT> <PARAMS> method=restart </PARAMS> <TEXT> Restarting </TEXT>'])
     prompts = [
         "Log out from the system", "Logout from the computer", "Sign out from the PC",
-        "Log out from the device", "Logout from the machine", "Sign out from the laptop"
+        "Log out from the device", "Logout from the machine", "Sign out from the laptop",
+        "Get me logged out from this device",
     ]
     for i in prompts:
         dataset.append([i,f'<INTENT> {protocol_map_str["SystemControlProtocol"]} 3 </INTENT> <PARAMS> method=logout </PARAMS> <TEXT> Logging out </TEXT>'])
@@ -137,7 +135,8 @@ def getSyntheticData():
     ]
     for i in prompts:
         dataset.append([i,f'<INTENT> {protocol_map_str["SystemControlProtocol"]} 4 </INTENT> <PARAMS> spec="charger" </PARAMS>'])
-    prompts = ["what's the battery?","How is the battery?","Battery stats","Battery"]
+    prompts = ["what's the battery?","How is the battery?","Battery stats","Battery","Get the whole info about battery",
+               "I need full battery info","Any problem with battery?"]
     for i in prompts:
         dataset.append([i,f'<INTENT> {protocol_map_str["SystemControlProtocol"]} 4 </INTENT> <TEXT> </TEXT>'])
     
