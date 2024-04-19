@@ -1,10 +1,12 @@
+/* eslint-disable react/prop-types */
 import { useRef } from "react";
 import axios from "axios";
 import "./input.css";
 
-const Input = () => {
+const backend_API_URL = import.meta.env.VITE_backend_API_URL;
+
+const Input = ({ time, setIsGenerating, setMessages }) => {
   const promptRef = useRef();
-  const backend_API_URL = import.meta.env.VITE_backend_API_URL;
 
   const handlePrompt = async (e) => {
     e.preventDefault();
@@ -14,11 +16,29 @@ const Input = () => {
         promptRef.current.value = "";
         return;
       }
-      const res = await axios.post(
-        `${backend_API_URL}/intentResponse?query=${prompt}`
-      );
       promptRef.current.value = "";
-      console.log(res);
+      setMessages((prev) => [
+        ...prev,
+        {
+          user: true,
+          msg: prompt,
+          time: time(),
+        },
+      ]);
+      setIsGenerating(true);
+      const response = await axios.post(`${backend_API_URL}/intentResponse`, {
+        query: prompt,
+      });
+      const msg = response.data;
+      setIsGenerating(false);
+      setMessages((prev) => [
+        ...prev,
+        {
+          user: false,
+          msg: msg.response,
+          time: time(),
+        },
+      ]);
     } catch (error) {
       console.log("Error in handlePrompt:", error);
     }
