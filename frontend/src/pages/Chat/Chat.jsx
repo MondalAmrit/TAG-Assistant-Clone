@@ -64,6 +64,7 @@ const Chat = () => {
         time={time}
         setIsGenerating={setIsGenerating}
         setMessages={setMessages}
+        isGenerating={isGenerating}
       />
       <div ref={chatRef}></div>
     </main>
