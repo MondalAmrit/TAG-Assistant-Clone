@@ -5,7 +5,7 @@ import "./input.css";
 
 const backend_API_URL = import.meta.env.VITE_backend_API_URL;
 
-const Input = ({ time, setIsGenerating, setMessages }) => {
+const Input = ({ time, setIsGenerating, setMessages, isGenerating }) => {
   const promptRef = useRef();
 
   const handlePrompt = async (e) => {
@@ -52,7 +52,7 @@ const Input = ({ time, setIsGenerating, setMessages }) => {
           type="text"
           placeholder="Enter a prompt here..."
         />
-        <button type="submit">
+        <button type="submit" disabled={isGenerating}>
           <span className="material-symbols-outlined">send</span>
         </button>
       </form>

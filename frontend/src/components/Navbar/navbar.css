@@ -16,4 +16,18 @@
 
 .convo {
     margin-right: 5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.convo input {
+    height: 35px;
+    border-radius: 6px;
+    padding: 5px 15px;
+    font-size: 1rem;
+}
+
+.convo span {
+    font-size: 1.3rem;
 }
