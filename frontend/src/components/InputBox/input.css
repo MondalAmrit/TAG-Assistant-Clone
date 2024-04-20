@@ -55,7 +55,3 @@ input:focus {
     background-color: transparent;
     box-shadow: 0 0 4px rgb(197, 196, 196);
 }
-
-input[type="text"]:disabled {
-    cursor: not-allowed;
-}
