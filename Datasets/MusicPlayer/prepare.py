@@ -23,7 +23,7 @@ def generate_data(search_keys, search_prompts, search_tag = 'song'):
     dataset = []
     for k in search_keys:
         for p in search_prompts:
-            dataset.append([p+" "+k,f"<INTENT> {protocol_map_str['MusicPlayerProtocol']} 1 </INTENT> <PARAMS> search_type = {search_tag} </PARAMS> search_value = {k} </PARAMS> <TEXT> Playing the song of {k} on Internet </TEXT>"])
+            dataset.append([p+" "+k,f"<INTENT> {protocol_map_str['MusicPlayerProtocol']} 1 </INTENT> <PARAMS> search_type = {search_tag} </PARAMS> search_value = {k} </PARAMS> <TEXT> Playing the song of {k} online </TEXT>", f'MusicPlayerProtocol {search_tag}'])
     return dataset
 
 def getSyntheticData():

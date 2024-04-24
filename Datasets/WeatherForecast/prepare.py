@@ -40,7 +40,7 @@ def get_data(locations,prompts,intent):
     dataset = []
     for l in locations:
         for p in prompts:
-            dataset.append([p+l,f"<INTENT> {protocol_map_str['WeatherProtocol']} {intent} </INTENT><PARAMS> location={l} </PARAMS>"])
+            dataset.append([p+l,f"<INTENT> {protocol_map_str['WeatherProtocol']} {IntentMap[intent]} </INTENT><PARAMS> location={l} </PARAMS>", f'WeatherProtocol {intent}'])
     return dataset
 
 def getSyntheticData():
@@ -61,23 +61,23 @@ def getSyntheticData():
                'temperature in celsius at ','temperature in fahrenheit at ',
                'temperature in ','humidity at ','humidity in ','moisture at ',
                'wind speed at ', 'Air Quality at ']
-    dataset.extend(get_data(locations,prompts,IntentMap['current forecast']))
+    dataset.extend(get_data(locations,prompts,'current forecast'))
 
     # Future forecast prompts
     prompts = ['tell me the future forecast of ','future forecast of ','future weather condition in ',
                'next 3 days weather report of ','tommorrow weather condition at ',
                'tommorow temperature at ',]
-    dataset.extend(get_data(locations,prompts,IntentMap['future forecast']))
+    dataset.extend(get_data(locations,prompts,'future forecast'))
 
     # previous forecast prompts
     prompts = ['what is the weather condition at ', 'previous weather condition in ', 'past weather records of ',
                'previous 3 days weather report of ','yesterday weather at ','yesterday temperature at ',
                'yesterday humidity at ']
-    dataset.extend(get_data(locations,prompts,IntentMap['previous forecast']))
+    dataset.extend(get_data(locations,prompts,'previous forecast'))
 
     # geo location prompts
     prompts = ['get the co ordinates of ', 'co-ords of ','latitude and longitude of ','location of ',
                'geo location of ',]
-    dataset.extend(get_data(locations,prompts,IntentMap['geo location']))
+    dataset.extend(get_data(locations,prompts,'geo location'))
 
     return dataset

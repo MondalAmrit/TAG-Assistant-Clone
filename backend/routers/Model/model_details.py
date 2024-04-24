@@ -80,8 +80,8 @@ class Block(nn.Module):
 class GPT(nn.Module):
   def __init__(self, config):
     super().__init__()
-    self.token_embedding_table = nn.Embedding(config.vocab_size, config.d_model, padding_idx = 0)
-    self.postion_embedding_table = nn.Embedding(config.seq_len, config.d_model, padding_idx = 0)
+    self.token_embedding_table = nn.Embedding(config.vocab_size, config.d_model)
+    self.postion_embedding_table = nn.Embedding(config.seq_len, config.d_model)
     self.blocks = nn.ModuleList([Block(config) for _ in range(config.num_layers)])
     self.ln = LayerNorm(config.d_model,config.bias)
     self.out_proj = nn.Linear(config.d_model,config.vocab_size, bias = config.bias)
@@ -101,22 +101,18 @@ class GPT(nn.Module):
   def device(self):   return next(self.parameters()).device
 
   @torch.no_grad()
-  def generate(self, prompt, num_tokens = 100):
+  def generate(self, x, num_tokens = 100, special_tokens = False, with_argmax = False):
     global tokenizer
-    self.eval()
-    self.to(device = config.device)
-    
-    inp = tokenizer.encode(f'<START> {prompt} <END>'.lower())[-self.seq_len:]
-    inp = torch.tensor( inp, dtype = torch.int ).to(device = self.device)
-
+    # x : (Seq Len)
+    x= torch.tensor( tokenizer.encode(x)[:-1], device = self.device ) # Discard the [SEP] token here.
     for _ in range(num_tokens):
-        logits, _ = self(inp[-self.seq_len:].unsqueeze(dim=0))
-        tkn = torch.multinomial( F.softmax(logits[:,-1,:], dim = -1), num_samples = 1 ).to(device = self.device)
-        inp = torch.cat( (inp, tkn[0]), dim=-1 )
-        
-    m = tokenizer.decode(inp)
-    s,e = m.find('< text >') + len('< text >'), m.find('< / text >')
-    print("MultiNomial:",m[s:e])
-    return m[s:e]
-  
-print('Loaded the model class')
+        out, _ = self(x[-self.seq_len:].unsqueeze(0))     # Input : (1,seq_len)  Output : (1,seq_len,vocab_size)
+        if with_argmax:
+            tkn = out[0,-1].argmax()
+        else: 
+            tkn = torch.multinomial( F.softmax(out[:,-1], dim = -1), num_samples = 1 ).to(device = x.device)[0]
+        x = torch.cat( (x, tkn), dim=-1 )
+    res = tokenizer.decode( x.tolist() )  # x : (Seq len + num_tokens)
+    # Only Send the response back.
+    s,e = res.find('[QUES] ') + len('[QUES] ') , res.find(' [SEP]')
+    return res[s:e]

@@ -69,7 +69,7 @@ def getSyntheticData():
                 "maths","physics","chemistry","sicence","computers","ecology","geography","data analytics","ai","llm","language models"]
     for p in info_prompts:
         for k in info_keys:
-            dataset.append([p+k, f"<INTENT> {protocol_map_str['InternetSearchProtocol']} {IntentMap['information']} </INTENT> <PARAMS> query={p+k} </PARAMS> <TEXT> Searching the web... </TEXT>"])
+            dataset.append([p+k, f"<INTENT> {protocol_map_str['InternetSearchProtocol']} {IntentMap['information']} </INTENT> <PARAMS> query={p+k} </PARAMS> <TEXT> Searching the web... </TEXT>", 'InternetSearchProtocol information'])
 
     # open urls
     # URL prompts with expansions
@@ -83,7 +83,7 @@ def getSyntheticData():
                 'spotify', 'bbc', 'cnn', 'nytimes', 'yahoo', 'bing', 'wordpress', 'pinterest', 'dropbox', 'twitch']
     for p in url_prompts:
         for k in web_keys:
-            dataset.append([p+k, f"<INTENT> {protocol_map_str['InternetSearchProtocol']} {IntentMap['open website']} </INTENT> <PARAMS> url={k} </PARAMS> <TEXT> Opening {k}... </TEXT>"])
+            dataset.append([p+k, f"<INTENT> {protocol_map_str['InternetSearchProtocol']} {IntentMap['open website']} </INTENT> <PARAMS> url={k} </PARAMS> <TEXT> Opening {k}... </TEXT>", 'InternetSearchProtocol open website'])
 
     # image
     image_prompts = ["Give me an image of a ", "Image of a ", "Show me pictures of ", "Find me an image of a tropical ", "I need a picture of a mountain ", "Can you provide an image of a ", "I'm looking for pictures of ", "Image search: ", "Please show me photos of ", "Find an image related to "]
@@ -91,7 +91,7 @@ def getSyntheticData():
                   "human","rats","college","metro","flights","auto",'cab','car','comb','cost','country','currency','note','book']
     for p in image_prompts:
         for k in image_keys:
-            dataset.append([p+k, f"<INTENT> {protocol_map_str['InternetSearchProtocol']} {IntentMap['image']} </INTENT> <PARAMS> query={p+k} </PARAMS> <TEXT> Generating image of {k}... </TEXT>"])
+            dataset.append([p+k, f"<INTENT> {protocol_map_str['InternetSearchProtocol']} {IntentMap['image']} </INTENT> <PARAMS> query={p+k} </PARAMS> <TEXT> Generating image of {k}... </TEXT>", 'InternetSearchProtocol image'])
 
     # product
     product_prompts = ["Show me ","Show me the products related to " , "Tell me about ", "Can you provide details ", "Give me information about ", "Provide information about ", "Give me details about ", "Show me available ",
@@ -106,6 +106,6 @@ def getSyntheticData():
                     "samsung s20 ultra", 'IQOO Z6 lite','realme 9','realme 8i','xiaomi','redmi','poco','pocox2','Noise fit']
     for p in product_prompts:
         for k in product_keys:
-            dataset.append([p+k, f"<INTENT> {protocol_map_str['InternetSearchProtocol']} {IntentMap['product']} </INTENT> <PARAMS> product={k} </PARAMS> <TEXT> Showing {k}... </TEXT> "])
+            dataset.append([p+k, f"<INTENT> {protocol_map_str['InternetSearchProtocol']} {IntentMap['product']} </INTENT> <PARAMS> product={k} </PARAMS> <TEXT> Showing {k}... </TEXT> ", 'InternetSearchProtocol product'])
 
     return dataset

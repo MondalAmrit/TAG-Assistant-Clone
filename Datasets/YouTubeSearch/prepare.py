@@ -35,16 +35,16 @@ def get_dataset(split = 0.9, limit =  None):
 def generate_data(query):
     dataset = []
     for q in query:
-            dataset.append([f'Search {q} on Youtube', f'<INTENT> {protocol_map_str["YouTubeSearchProtocol"]} {intentMap["SearchYoutube"]} </INTENT> <PARAMS> query={q} </PARAMS> <TEXT> Searching on YouTube </TEXT>'])
-            dataset.append([f'Search for {q} on YouTube', f'<INTENT> {protocol_map_str["YouTubeSearchProtocol"]} {intentMap["SearchYoutube"]} </INTENT> <PARAMS> query={q} </PARAMS> <TEXT> Searching on YouTube </TEXT>'])
-            dataset.append([f'Search {q} on YT', f'<INTENT> {protocol_map_str["YouTubeSearchProtocol"]} {intentMap["SearchYoutube"]} </INTENT> <PARAMS> query={q} </PARAMS> <TEXT> Searching on YouTube </TEXT>'])
-            dataset.append([f'Youtube search for {q}', f'<INTENT> {protocol_map_str["YouTubeSearchProtocol"]} {intentMap["SearchYoutube"]} </INTENT> <PARAMS> query={q} </PARAMS> <TEXT> Searching on YouTube </TEXT>'])
-            dataset.append([f'Youtube search on {q}', f'<INTENT> {protocol_map_str["YouTubeSearchProtocol"]} {intentMap["SearchYoutube"]} </INTENT> <PARAMS> query={q} </PARAMS> <TEXT> Searching on YouTube </TEXT>'])
-            dataset.append([f'Youtube search about {q}', f'<INTENT> {protocol_map_str["YouTubeSearchProtocol"]} {intentMap["SearchYoutube"]} </INTENT> <PARAMS> query={q} </PARAMS> <TEXT> Searching on YouTube </TEXT>'])
-            dataset.append([f'search in youtube for {q}', f'<INTENT> {protocol_map_str["YouTubeSearchProtocol"]} {intentMap["SearchYoutube"]} </INTENT> <PARAMS> query={q} </PARAMS> <TEXT> Searching on YouTube </TEXT>'])
-            dataset.append([f'{q} in YouTube', f'<INTENT> {protocol_map_str["YouTubeSearchProtocol"]} {intentMap["SearchYoutube"]} </INTENT> <PARAMS> query={q} </PARAMS> <TEXT> Searching on YouTube </TEXT>'])
-            dataset.append([f'Videos of {q} from YouTube', f'<INTENT> {protocol_map_str["YouTubeSearchProtocol"]} {intentMap["SearchYoutube"]} </INTENT> <PARAMS> query={q} </PARAMS> <TEXT> Searching on YouTube </TEXT>'])
-            dataset.append([f'Youtube Playlists for {q}', f'<INTENT> {protocol_map_str["YouTubeSearchProtocol"]} {intentMap["SearchYoutube"]} </INTENT> <PARAMS> query={q} </PARAMS> <TEXT> Searching on YouTube </TEXT>'])
+            dataset.append([f'Search {q} on Youtube', f'<INTENT> {protocol_map_str["YouTubeSearchProtocol"]} {intentMap["SearchYoutube"]} </INTENT> <PARAMS> query={q} </PARAMS> <TEXT> Searching on YouTube </TEXT>', "YouTubeSearchProtocol search Youtube"])
+            dataset.append([f'Search for {q} on YouTube', f'<INTENT> {protocol_map_str["YouTubeSearchProtocol"]} {intentMap["SearchYoutube"]} </INTENT> <PARAMS> query={q} </PARAMS> <TEXT> Searching on YouTube </TEXT>', "YouTubeSearchProtocol search Youtube"])
+            dataset.append([f'Search {q} on YT', f'<INTENT> {protocol_map_str["YouTubeSearchProtocol"]} {intentMap["SearchYoutube"]} </INTENT> <PARAMS> query={q} </PARAMS> <TEXT> Searching on YouTube </TEXT>', "YouTubeSearchProtocol search Youtube"])
+            dataset.append([f'Youtube search for {q}', f'<INTENT> {protocol_map_str["YouTubeSearchProtocol"]} {intentMap["SearchYoutube"]} </INTENT> <PARAMS> query={q} </PARAMS> <TEXT> Searching on YouTube </TEXT>', "YouTubeSearchProtocol search Youtube"])
+            dataset.append([f'Youtube search on {q}', f'<INTENT> {protocol_map_str["YouTubeSearchProtocol"]} {intentMap["SearchYoutube"]} </INTENT> <PARAMS> query={q} </PARAMS> <TEXT> Searching on YouTube </TEXT>', "YouTubeSearchProtocol search Youtube"])
+            dataset.append([f'Youtube search about {q}', f'<INTENT> {protocol_map_str["YouTubeSearchProtocol"]} {intentMap["SearchYoutube"]} </INTENT> <PARAMS> query={q} </PARAMS> <TEXT> Searching on YouTube </TEXT>', "YouTubeSearchProtocol search Youtube"])
+            dataset.append([f'search in youtube for {q}', f'<INTENT> {protocol_map_str["YouTubeSearchProtocol"]} {intentMap["SearchYoutube"]} </INTENT> <PARAMS> query={q} </PARAMS> <TEXT> Searching on YouTube </TEXT>', "YouTubeSearchProtocol search Youtube"])
+            dataset.append([f'{q} in YouTube', f'<INTENT> {protocol_map_str["YouTubeSearchProtocol"]} {intentMap["SearchYoutube"]} </INTENT> <PARAMS> query={q} </PARAMS> <TEXT> Searching on YouTube </TEXT>', "YouTubeSearchProtocol search Youtube"])
+            dataset.append([f'Videos of {q} from YouTube', f'<INTENT> {protocol_map_str["YouTubeSearchProtocol"]} {intentMap["SearchYoutube"]} </INTENT> <PARAMS> query={q} </PARAMS> <TEXT> Searching on YouTube </TEXT>', "YouTubeSearchProtocol search Youtube"])
+            dataset.append([f'Youtube Playlists for {q}', f'<INTENT> {protocol_map_str["YouTubeSearchProtocol"]} {intentMap["SearchYoutube"]} </INTENT> <PARAMS> query={q} </PARAMS> <TEXT> Searching on YouTube </TEXT>', "YouTubeSearchProtocol search Youtube"])
     return dataset
 
 

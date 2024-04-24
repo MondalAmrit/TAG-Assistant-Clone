@@ -54,7 +54,7 @@ def get_data(commands, prompts, intent):
     dataset = []
     for command in commands:
         for prompt in prompts:
-            dataset.append([prompt.replace('#TKN#',command), f"<INTENT> {protocol_map_str['GITCommandProtocol']} {IntentMap[intent]} </INTENT> <PARAMS> command={command} </PARAMS>"])
+            dataset.append([prompt.replace('#TKN#',command), f"<INTENT> {protocol_map_str['GITCommandProtocol']} {IntentMap[intent]} </INTENT> <PARAMS> command={command} </PARAMS>", f'GITCommandProtocol {intent}'])
     return dataset
 
 def getSyntheticData():
@@ -67,7 +67,7 @@ def getSyntheticData():
     commands = [f'file{i}.py' for i in range(20)] + ['file.py','sample.py','testing.txt','sample.txt']
     prompts = ['Add file #TKN#', 'Stage file #TKN#', 'Include file #TKN#', 'Append file #TKN#', 
                'Can you please add this file #TKN#', "Why don't you add #TKN#",
-               'Add #TKN# file to the repo', 'Add #TKN# file']
+               'Add #TKN# file to the repo', 'Add #TKN# file', 'Add #TKN# file if possible']
     dataset.extend(get_data(commands, prompts, 'add files'))
 
     # Create new branch
@@ -89,7 +89,7 @@ def getSyntheticData():
     prompts = ['Create tag #TKN#', 'Generate tag #TKN#', 'Label tag #TKN#', 'Mark tag #TKN#',
                'Can you create a tag in github as #TKN#', 'create a tag  in github as #TKN#',
                'create a new tag in github with name #TKN#', "Why don't you create a tag with name as #TKN#",
-               'create a #TKN# tag', 'make a #TKN# tag']
+               'create a #TKN# tag', 'make a #TKN# tag','if possible then create a tag as #TKN#']
     dataset.extend(get_data(tags, prompts, 'create tag'))
 
     return dataset

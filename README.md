@@ -19,6 +19,8 @@ For Installation setup refer [here](docs/installation.md) <br />
 For Usage setup refer [here](docs/usage.md) <br />
 **Note:** Installation is a one time setup and usage is to be done on every activation.
 
+# How can I contribute?
+Read the [contriubtion guidelines](docs/contribution_guide.md)
 
 # Current Version Features
 - [x] Chat Interface

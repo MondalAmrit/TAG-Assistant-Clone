@@ -9,7 +9,7 @@ def get_dataset(split = 0.9, limit = None):
         reader = csv.reader(f)
         dataset = list(reader)[:limit] if limit else list(reader)
 
-    dataset = [[i[0],"<TEXT>" + i[1] + "</TEXT>"] for i in dataset]
+    dataset = [[i[0],"<TEXT>" + i[1] + "</TEXT>",i[2]] for i in dataset]
 
     # Add Synthetic data generation
     if not (limit and len(dataset) < limit):
@@ -24,7 +24,7 @@ def generate_data(prompts, responses):
     dataset = []
     for prompt in prompts:  
         for response in responses:  
-            dataset.append([prompt, "<TEXT> " + response + " </TEXT>"])
+            dataset.append([prompt, "<TEXT> " + response + " </TEXT>",'BasicChat'])
     return dataset    
 
 def getSyntheticData():

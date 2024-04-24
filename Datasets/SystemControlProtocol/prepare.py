@@ -41,14 +41,14 @@ def generate_data(val_list,prompts,generate_type = 'volume', inc = None):
     for v in val_list:
         for p in prompts:
             dataset.append([p+str(v),f'<INTENT> {protocol_map_str["SystemControlProtocol"]} {intentMap[generate_type]} </INTENT> <PARAMS> qty={str(v)} </PARAMS> ' +
-                            (f'inc={inc} </PARAMS> ' if inc and generate_type in ('volume','brightness') else '')])
+                            (f'inc={inc} </PARAMS> ' if inc and generate_type in ('volume','brightness') else ''), f'SystemControlProtocol {generate_type}'])
     return dataset
 
 def generate_single_data(lst,inp_type = None):
     dataset = []
     for i in lst:
         dataset.append([i,f'<INTENT> {protocol_map_str["SystemControlProtocol"]} {intentMap["datetime"]} </INENT> ' +
-                        (f'<PARAMS> inp_type={inp_type} </PARAMS>' if inp_type else '')])
+                        (f'<PARAMS> inp_type={inp_type} </PARAMS>' if inp_type else ''),  f'SystemControlProtocol datetime'])
     return dataset
 
 def getSyntheticData():
@@ -80,7 +80,7 @@ def getSyntheticData():
         "Just shut down", "Just shutdown",
     ]
     for i in prompts:
-        dataset.append([i,f'<INTENT> {protocol_map_str["SystemControlProtocol"]} 3 </INTENT> <PARAMS> method=shutdown </PARAMS> <TEXT> Shutting Down </TEXT>'])
+        dataset.append([i,f'<INTENT> {protocol_map_str["SystemControlProtocol"]} 3 </INTENT> <PARAMS> method=shutdown </PARAMS> <TEXT> Shutting Down </TEXT>',  'SystemControlProtocol shutdown'])
     prompts = [
         "Put the system to sleep", "Hibernate the computer", "Sleep the PC",
         "Put the computer to sleep", "Sleep the device", "Hibernate the PC",
@@ -88,21 +88,21 @@ def getSyntheticData():
         "Why don't you sleep", "Sleep",
     ]
     for i in prompts:
-        dataset.append([i,f'<INTENT> {protocol_map_str["SystemControlProtocol"]} 3 </INTENT> <PARAMS> method=sleep </PARAMS> <TEXT> Sleeping </TEXT>'])
+        dataset.append([i,f'<INTENT> {protocol_map_str["SystemControlProtocol"]} 3 </INTENT> <PARAMS> method=sleep </PARAMS> <TEXT> Sleeping </TEXT>',  'SystemControlProtocol sleep'])
     prompts = [
         "Restart the system", "Reboot the computer", "Restart the PC",
         "Restart the device", "Reboot the machine", "Restart the laptop",
         "Reboot","Restart system",
     ]
     for i in prompts:
-        dataset.append([i,f'<INTENT> {protocol_map_str["SystemControlProtocol"]} 3 </INTENT> <PARAMS> method=restart </PARAMS> <TEXT> Restarting </TEXT>'])
+        dataset.append([i,f'<INTENT> {protocol_map_str["SystemControlProtocol"]} 3 </INTENT> <PARAMS> method=restart </PARAMS> <TEXT> Restarting </TEXT>',  'SystemControlProtocol restart'])
     prompts = [
         "Log out from the system", "Logout from the computer", "Sign out from the PC",
         "Log out from the device", "Logout from the machine", "Sign out from the laptop",
         "Get me logged out from this device",
     ]
     for i in prompts:
-        dataset.append([i,f'<INTENT> {protocol_map_str["SystemControlProtocol"]} 3 </INTENT> <PARAMS> method=logout </PARAMS> <TEXT> Logging out </TEXT>'])
+        dataset.append([i,f'<INTENT> {protocol_map_str["SystemControlProtocol"]} 3 </INTENT> <PARAMS> method=logout </PARAMS> <TEXT> Logging out </TEXT>',  'SystemControlProtocol logout'])
 
     # Battery
     prompts = [
@@ -113,7 +113,7 @@ def getSyntheticData():
         "Current battery level", "Battery percent", "How much battery is remaining?"
     ]
     for i in prompts:
-        dataset.append([i,f'<INTENT> {protocol_map_str["SystemControlProtocol"]} 4 </INTENT> <PARAMS> spec="battery" </PARAMS>'])
+        dataset.append([i,f'<INTENT> {protocol_map_str["SystemControlProtocol"]} 4 </INTENT> <PARAMS> spec="battery" </PARAMS>',  'SystemControlProtocol battery'])
     prompts = [
         "Check remaining battery time", "How much time left on battery?",
         "Battery time remaining", "Remaining battery time", "Battery time left",
@@ -124,7 +124,7 @@ def getSyntheticData():
         "How much time do I have on my battery?"
     ]
     for i in prompts:
-        dataset.append([i,f'<INTENT> {protocol_map_str["SystemControlProtocol"]} 4 </INTENT> <PARAMS> spec="time" </PARAMS>'])
+        dataset.append([i,f'<INTENT> {protocol_map_str["SystemControlProtocol"]} 4 </INTENT> <PARAMS> spec="time" </PARAMS>',  'SystemControlProtocol battery'])
     prompts = [
         "Check charger status", "Is the charger plugged in?",
         "Charger plugged status", "Charger status", "Charger plugged",
@@ -134,11 +134,11 @@ def getSyntheticData():
         "Show charger connection", "Power supply status", "Is the laptop on power?"
     ]
     for i in prompts:
-        dataset.append([i,f'<INTENT> {protocol_map_str["SystemControlProtocol"]} 4 </INTENT> <PARAMS> spec="charger" </PARAMS>'])
+        dataset.append([i,f'<INTENT> {protocol_map_str["SystemControlProtocol"]} 4 </INTENT> <PARAMS> spec="charger" </PARAMS>',  'SystemControlProtocol battery'])
     prompts = ["what's the battery?","How is the battery?","Battery stats","Battery","Get the whole info about battery",
                "I need full battery info","Any problem with battery?"]
     for i in prompts:
-        dataset.append([i,f'<INTENT> {protocol_map_str["SystemControlProtocol"]} 4 </INTENT> <TEXT> </TEXT>'])
+        dataset.append([i,f'<INTENT> {protocol_map_str["SystemControlProtocol"]} 4 </INTENT> <TEXT> </TEXT>',  'SystemControlProtocol battery'])
     
     # DateTime
     prompts = [
