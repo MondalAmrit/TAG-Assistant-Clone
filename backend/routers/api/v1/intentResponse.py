@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
-from ...Model.get_model import model
+from cmd_executor import check_cmd
 router = APIRouter()
 
 class ArgsResponse(BaseModel):
@@ -10,7 +10,7 @@ class ArgsResponse(BaseModel):
 
 @router.post('/intentResponse',tags=['IntentResponse'])
 def generate_reponse(query: dict):
-    return {'result':'ok','response':model.generate(query['query']), 'prompt':query['query']}
+    return {'result':'ok','response':check_cmd(query['query']), 'prompt':query['query']}
 
 @router.post('/argsResponse')
 def args_response(resp: ArgsResponse):

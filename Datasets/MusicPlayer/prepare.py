@@ -19,11 +19,11 @@ def get_dataset(split = 0.9, limit =  None):
     random.shuffle(dataset)
     return dataset[:split_idx], dataset[split_idx:]
 
-def generate_data(search_keys, search_prompts, search_tag = 'song'):
+def generate_data(search_keys, search_prompts):
     dataset = []
     for k in search_keys:
         for p in search_prompts:
-            dataset.append([p+" "+k,f"<INTENT> {protocol_map_str['MusicPlayerProtocol']} 1 </INTENT> <PARAMS> search_type = {search_tag} </PARAMS> search_value = {k} </PARAMS> <TEXT> Playing the song of {k} online </TEXT>", f'MusicPlayerProtocol {search_tag}'])
+            dataset.append([p+" "+k,f"<INTENT> {protocol_map_str['MusicPlayerProtocol']} 1 </INTENT> <PARAMS> search_value = {k} </PARAMS> <TEXT> Playing the song of {k} online </TEXT>", f'MusicPlayerProtocol'])
     return dataset
 
 def getSyntheticData():
@@ -47,7 +47,7 @@ def getSyntheticData():
         "Play a track from", "Let's enjoy some music by", "How about some tunes from", "Can you play something by",
         "I'm in the mood for a song by", "Play a track by", "Could you put on some music by", "I'd like to hear something from"
     ]
-    dataset.extend(generate_data(artists,prompts,'artist'))
+    dataset.extend(generate_data(artists,prompts))
 
     # Play Song by album
     albums = [
@@ -83,7 +83,7 @@ def getSyntheticData():
         "I'm feeling like listening to some albums from", "Play some albums from", "Could you play some albums from",
         "Let's put on some albums from"
     ]
-    dataset.extend(generate_data(albums,prompts,'album'))
+    dataset.extend(generate_data(albums,prompts))
 
 
     # Play Song by Song name
@@ -104,6 +104,6 @@ def getSyntheticData():
         "I'd love to listen to", "Why not play", "How about listening to", "Play some tunes from",
         "Let's hear", "I'm feeling like listening to"
     ]
-    dataset.extend(generate_data(songs,prompts,'songs'))
+    dataset.extend(generate_data(songs,prompts))
 
     return dataset
