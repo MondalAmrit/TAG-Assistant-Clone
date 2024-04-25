@@ -1,10 +1,10 @@
-from Datasets.WeatherForecast import executor as weatherProtocol
-from Datasets.GITcommandHandler import executor as GITCommandProtocol
-from Datasets.InternetSearch import executor as InternetSearchProtocol
-from Datasets.YouTubeSearch import executor as YouTubeSearchProtocol
-from Datasets.MusicPlayer import executor as MusicPlayerProtocol
-from Datasets.WeatherForecast import executor as WeatherProtocol
-from Datasets.SystemControlProtocol import executor as SystemControlProtocol
+from backend.Intents.Weather import actions as weatherProtocol
+from backend.Intents.GIT import actions as GITCommandProtocol
+from backend.Intents.Internet import actions as InternetSearchProtocol
+from backend.Intents.YouTube import actions as YouTubeSearchProtocol
+from backend.Intents.Music import actions as MusicPlayerProtocol
+from backend.Intents.Weather import actions as WeatherProtocol
+from backend.Intents.System import actions as SystemControlProtocol
 
 
 import pprint, inspect
