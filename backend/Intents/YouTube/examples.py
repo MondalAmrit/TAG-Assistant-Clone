@@ -68,3 +68,24 @@ def getSyntheticData():
                "David Dobrik", "Liza Koshy", "Casey Neistat", "Emma Chamberlain", "Lilly Singh", "The Try Guys"]
     dataset.extend(generate_data(queries))
     return dataset
+
+def create_examples( queries,tokens,TAG,prompt_only=False ):
+    dataset = []
+    for q in queries:
+        for t in tokens:
+            if prompt_only:
+                dataset.append(q.replace('#tkn#',t,1))
+            else:
+                dataset.append([q.replace('#tkn#',t,1),TAG])
+    return dataset
+
+def synthetic_examples_dataset():
+    dataset = []
+    # Search prompts
+    queries = ["Why don't you search for #tkn# videos", "open #tkn# video in youtube", "Show me videos regarding #tkn#",
+               "search for videos related to #tkn#", "I need videos related to #tkn#", "videos realted to #tkn#",
+               "videos of #tkn#", "play #tkn# on youtube"]
+    tokens = ['funny', 'jokes', 'python tutorials', 'java tutorials', 'c tutorials', 'breakfast', ' travel', 'vlogs',
+              'Photography']
+    
+    dataset.extend(create_examples( queries,tokens,'YouTube Search' ))

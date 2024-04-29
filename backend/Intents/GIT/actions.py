@@ -5,9 +5,38 @@ The subprocess module is used to spawn new processes, connect to their input/out
 
 """
 
-import subprocess
+import subprocess, os
 
 # Git Command Functions
+def find_repo_location(repo_name):
+    # Traverse in file system from C drive
+    for root, dirs, files in os.walk("C:\\"):
+        if repo_name.lower() in [d.lower() for d in dirs]:
+            return os.path.join(root, repo_name)
+    return None
+
+def pullRepo(project):
+     # Dictionary mapping repository names to their corresponding locations
+    repository_locations = {
+        "ABC repo": "/path/to/ABC/repo",
+        "XYZ repo": "/path/to/XYZ/repo",
+        # Add more repositories as needed
+    }
+    if project:
+        print( f"Running: git pull for {project}" )
+        repository_location = repository_locations.get(project)
+        if repository_location:
+            print(f"Repository location found: {repository_location}")
+            subprocess.run(['git', 'pull'], cwd=repository_location)
+        else:
+            repo_location = find_repo_location(project)
+            if repo_location:
+                print(f"Repository location found through search: {repo_location}")
+                subprocess.run(['git', 'pull'], cwd=repo_location)
+            else:
+                print("Repository not found.")
+    else:
+        print("Repository identifier not provided.")
 
 def gitInit():
     # Initialize a new Git repository
