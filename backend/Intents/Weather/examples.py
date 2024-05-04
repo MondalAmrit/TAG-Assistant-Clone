@@ -2,82 +2,81 @@ import csv, re, random
 from protocol_activator import protocol_map_str
 
 IntentMap = {
-    "current forecast" : 1,
-    "geo location" : 2,
-    "previous forecast" : 3,
-    "future forecast" : 4,
+    "Current Weather Forecast" : 1,
+    "Geo Location" : 2,
+    "Past Weather Forecast" : 3,
+    "Future Weather Forecast" : 4,
     "astronomy" : 5,
 }
 
-def rephrase(l):
-    patterns = {f'#{k}#':v for k,v in IntentMap.items()}
-    patterns['#PROTOCOL_CODE#'] = protocol_map_str['WeatherProtocol']
-
-    for i in l:
-        for k,v in patterns.items():
-            i[1] = re.sub(k,str(v),i[1])
-    return l
-
 def get_dataset(split = 0.9, limit =  None):
-    """
-    Generates the dataset
-    """
+    """ Generates the dataset """
     dataset = []
-    # Open dataset.csv and get it's contents
-    with open('Datasets/WeatherForecast/dataset.csv') as f:
-        reader = csv.reader(f)
-        dataset = rephrase(list(reader)[:limit] if limit else list(reader))
+    # Open dataset.csv and get it's contents (Not done yet)
     
     # Add Synthetic data generation
     if not (limit and len(dataset) < limit):
-        dataset.extend(getSyntheticData())
+        res = synthetic_examples_dataset(split = split)
+        dataset[0].extend(res[0])
+        dataset[1].extend(res[1])
         
-    split_idx = int(split*len(dataset))
-    random.shuffle(dataset)
-    return dataset[:split_idx], dataset[split_idx:]
+    return dataset[0], dataset[1]
 
-def get_data(locations,prompts,intent):
+def create_examples( queries,tokens,TAG, split = 0.9 ):
+    """ Creates dataset for the given actions based on queries and tokens """
     dataset = []
-    for l in locations:
-        for p in prompts:
-            dataset.append([p+l,f"<INTENT> {protocol_map_str['WeatherProtocol']} {IntentMap[intent]} </INTENT><PARAMS> location={l} </PARAMS>", f'WeatherProtocol {intent}'])
-    return dataset
+    for q in queries:
+        for t in tokens:
+            dataset.append([q.replace('#tkn#',t,1),TAG])
+    split_idx = int(len(dataset)*split)
+    return [dataset[:split_idx],dataset[split_idx:]]
 
-def getSyntheticData():
-    """
-    Add Your Synthetic Data here and normal data in the csv file
-    """
+def synthetic_examples_dataset(split = 0.9):
+    """ Write down you synthetic examples here """
     dataset = []
-
-    locations = ['New Delhi','delhi','Mumbai','Kolkata','Chennai','Bangloore','Moscow','New York','Shanghai','Tokyo',
+    # Current Weather Forecast
+    queries = ['What is the current weather at #tkn#', 'current weather status at #tkn#', 'present weather condition in #tkn#',
+               'weather at #tkn#','weather situation at #tkn#','temperature at #tkn#','heat at #tkn#',
+               'temperature in celsius at #tkn#','temperature in fahrenheit at #tkn#',
+               'temperature in #tkn#','humidity at #tkn#','humidity in #tkn#','moisture at #tkn#',
+               'wind speed at #tkn#', 'Air Quality at #tkn#',
+               'weather of #tkn#', "#tkn#'s weather", "weather of #tkn# today", "#tkn#'s weather report",
+               "fetch me the weather report of #tkn#", "give me the weather report of #tkn#", 
+               "why is it so hot in #tkn#?", "why the weather changed suddenly at #tkn#"]
+    tokens = ['New Delhi','delhi','Mumbai','Kolkata','Chennai','Bangloore','Moscow','New York','Shanghai','Tokyo',
                  'Pune','Hyderabad','Islamabad','Dhaka','columbo','Australia','India','Spain','Morocco',
                  'Paris','England','oslo','toronto','Agra','Lucknow','Muzafar nagar','vijayawada','Guntur',
                  'Vishakapatnam','Vellore','tirupati','jammu','kashmir','china','pakistan','egypt',
                  'isarel','saudi arabia']
     
-    # Current forecast prompts
-    prompts = ['What is the current weather at ', 'current weather status at ', 'present weather condition in ',
-               'weather at ','weather situation at ','temperature at ','heat at ',
-               'temperature in celsius at ','temperature in fahrenheit at ',
-               'temperature in ','humidity at ','humidity in ','moisture at ',
-               'wind speed at ', 'Air Quality at ']
-    dataset.extend(get_data(locations,prompts,'current forecast'))
+    res = create_examples( queries,tokens,'Current Weather Forecast',split=0.9 )
+    dataset[0].extend(res[0])
+    dataset[1].extend(res[1])
 
-    # Future forecast prompts
-    prompts = ['tell me the future forecast of ','future forecast of ','future weather condition in ',
-               'next 3 days weather report of ','tommorrow weather condition at ',
-               'tommorow temperature at ',]
-    dataset.extend(get_data(locations,prompts,'future forecast'))
+    # Future Weather Forecast
+    queries = ['tell me the future forecast of #tkn#','future forecast of #tkn#','future weather condition in #tkn#',
+               'next 3 days weather report of #tkn#','tommorrow weather condition at #tkn#',
+               'tommorow temperature at #tkn#','what would be the weather condition at #tkn# tommorrow?',
+               'give me the future forecast of #tkn#', 'upcomming weather changes of #tkn#',
+               "I need day after tommorrow's weather report for #tkn#", "why don't you give me the future weather forecast for #tkn#"] 
+    res = create_examples( queries,tokens,'Future Weather Forecast',split=0.9 )
+    dataset[0].extend(res[0])
+    dataset[1].extend(res[1])
 
-    # previous forecast prompts
-    prompts = ['what is the weather condition at ', 'previous weather condition in ', 'past weather records of ',
-               'previous 3 days weather report of ','yesterday weather at ','yesterday temperature at ',
-               'yesterday humidity at ']
-    dataset.extend(get_data(locations,prompts,'previous forecast'))
+    # Past Weather Forecast
+    queries = ['what is the weather condition at #tkn#', 'previous weather condition in #tkn#', 'past weather records of #tkn#',
+               'previous 3 days weather report of #tkn#','yesterday weather at #tkn#','yesterday temperature at #tkn#',
+               'yesterday humidity at #tkn#', 'Can you fetch me the past weather report of #tkn#',
+               'previous weather forecast of #tkn#', 'give me the details of previous weather condition at #tkn#',
+               ]
+    res = create_examples( queries,tokens,'Past Weather Forecast',split=0.9 )
+    dataset[0].extend(res[0])
+    dataset[1].extend(res[1])
 
-    # geo location prompts
-    prompts = ['get the co ordinates of ', 'co-ords of ','latitude and longitude of ','location of ',
-               'geo location of ',]
-    dataset.extend(get_data(locations,prompts,'geo location'))
-
-    return dataset
+    # Geo - location
+    queries = ['get the co ordinates of #tkn#', 'co-ords of #tkn#','latitude and longitude of #tkn#','location of #tkn#',
+               'geo location of #tkn#', 'I need the co-ords of #tkn#', 'where is #tkn# located?',
+               'I need the location of #tkn#', 'find the location of #tkn#',]
+    res = create_examples( queries,tokens,'Geo Location',split=0.9 )
+    dataset[0].extend(res[0])
+    dataset[1].extend(res[1])

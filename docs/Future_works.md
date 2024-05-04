@@ -58,3 +58,8 @@ This will create a slot filling.
 
 Now the actual input will be created by simply replaceing #tkn# with SLOT_FILLING in serial order.
 ```
+
+# Current Works
+- [ ] Converting Each example to classification example
+- [ ] Use random shuffle at the end of dataset creation
+- [ ] Implement BERT model training on this dataset
