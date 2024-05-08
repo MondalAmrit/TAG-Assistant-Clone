@@ -1,37 +1,34 @@
+'''
+Ignoring the #name# like things as of now
+'''
+
 import csv, random
-def get_dataset(split = 0.9, limit = None):
-    """
-    Generates the dataset
-    """
-    dataset = []
-    # Open dataset.csv and get it's contents
-    with open('Datasets/BasicChat/dataset.csv') as f:
-        reader = csv.reader(f)
-        dataset = list(reader)[:limit] if limit else list(reader)
 
-    dataset = [[i[0],"<TEXT>" + i[1] + "</TEXT>",i[2]] for i in dataset]
-
+def get_dataset(split = 0.9, limit =  None):
+    """ Generates the dataset """
+    dataset = [[],[]]
+    # Open dataset.csv and get it's contents (Not done yet)
+    
     # Add Synthetic data generation
     if not (limit and len(dataset) < limit):
-        dataset.extend(getSyntheticData())
-    
-    split_idx = int(split*len(dataset))
-    random.shuffle(dataset)
+        res = synthetic_examples_dataset(split = split)
+        dataset[0].extend(res[0])
+        dataset[1].extend(res[1])
+    return dataset[0], dataset[1]
 
-    return dataset[:split_idx], dataset[split_idx:]
-
-def generate_data(prompts, responses):
+def create_examples(prompts, responses, TAG = 'BasicChat', split= 0.9 ):
+    """ Creates dataset for the given actions based on queries and tokens """
     dataset = []
     for prompt in prompts:  
         for response in responses:  
-            dataset.append([prompt, "<TEXT> " + response + " </TEXT>",'BasicChat'])
-    return dataset    
+            dataset.append([prompt, response ,TAG])
+    split_idx = int(len(dataset)*split)
+    random.shuffle(dataset)
+    return dataset[:split_idx], dataset[split_idx:]
 
-def getSyntheticData():
-    """
-    Generates the Synthetic dataset
-    """
-    dataset = []
+def synthetic_examples_dataset(split = 0.9):
+    """ Write down you synthetic examples here """
+    dataset = [[],[]]
 
     # Greetings
     prompts = ["Hello", "Hi", "Hey", "Good day", "Greetings", "Howdy", "Salutations", "Yo", "What's up", "Bonjour",
@@ -41,14 +38,18 @@ def getSyntheticData():
                         "Greetings! What would you like to talk about?", "Howdy! How can I assist you?", 
                         "Salutations! What can I do for you?", "Yo! How may I assist you?", 
                         "What's up! How can I help you today?", "Hey! Nice to see you. How can I assist you?"]
-    dataset.extend(generate_data(prompts,responses))
+    res = create_examples(prompts,responses)
+    dataset[0].extend(res[0])
+    dataset[1].extend(res[1])
     prompts = ["Welcome", "Good to see you", "Nice to meet you", "Pleasure to meet you", "How are you?", "What's new?", "How's it going?", "Long time no see", "How have you been?", "How's everything?"]
     responses = ["Welcome! How can I assist you today?", "Good to see you! What can I do for you?",
                         "Nice to meet you! What would you like to talk about?", "Pleasure to meet you! How may I assist you?", 
                         "I'm doing well, thank you! How about you?", "Not much, just here to help. What can I do for you?",
                         "It's going great! How can I assist you?", "Long time no see! What brings you here today?", 
                         "I've been good, thank you for asking. How can I help you?", "Everything's good here! How about you?"]
-    dataset.extend(generate_data(prompts, responses))
+    res = create_examples(prompts,responses)
+    dataset[0].extend(res[0])
+    dataset[1].extend(res[1])
     
     # Self
     prompts = ["What's your name?", "Who are you?", "Tell me about yourself", "What is TAG?", "What can you do?"]
@@ -57,27 +58,37 @@ def getSyntheticData():
              "I am TAG, an AI chatbot designed to help users leverage the power of automation through GPT-based text generation.",
              "TAG stands for Task Automation via GPT. It is a chatbot powered by GPT-based BERT Tokenized Text to Text Generation.",
              "TAG is designed to help users achieve the power of AI on low-level devices and leverage the power of automation through GPT-based text generation."]
-    dataset.extend(generate_data(prompts,responses))
+    res = create_examples(prompts,responses)
+    dataset[0].extend(res[0])
+    dataset[1].extend(res[1])
     prompts = ["How are you generating text?", "What technology do you use?", "Can you explain your text generation process?"]
     responses = ["I generate text using GPT-based BERT Tokenized Text to Text Generation.",
                 "My text generation process is based on GPT architecture with BERT tokenization.",
                 "I utilize GPT-based algorithms to generate text responses."]
-    dataset.extend(generate_data(prompts,responses))
+    res = create_examples(prompts,responses)
+    dataset[0].extend(res[0])
+    dataset[1].extend(res[1])
     prompts = ["How can you add value to me?", "What benefits do you offer?", "Why should I use your services?"]
     responses = ["I can help you automate tasks and leverage the power of AI on low-level devices.",
                 "By using my services, you can streamline processes and save time through automation.",
                 "I offer the ability to access AI capabilities for task automation and enhanced efficiency."]
-    dataset.extend(generate_data(prompts,responses))
+    res = create_examples(prompts,responses)
+    dataset[0].extend(res[0])
+    dataset[1].extend(res[1])
     prompts = ["What tasks can you assist with?", "Can you provide examples of what you can do?", "What are your capabilities?"]
     responses = ["I can assist with a wide range of tasks, including text generation, language understanding, and task automation.",
                 "Examples of tasks I can help with include answering questions, summarizing text, and generating creative content.",
                 "My capabilities include natural language processing, task automation, and providing contextual responses."]
-    dataset.extend(generate_data(prompts,responses))
+    res = create_examples(prompts,responses)
+    dataset[0].extend(res[0])
+    dataset[1].extend(res[1])
     prompts = ["Can I customize your behavior?", "Are there any settings I can adjust?", "Do you offer any personalization options?"]
     responses = ["Currently, I do not offer customization options, but I can adapt to your preferences over time.",
                 "At the moment, my behavior is not customizable, but I aim to provide personalized experiences in the future.",
                 "I do not have specific settings or personalization options, but I strive to understand and adapt to your needs."]
-    dataset.extend(generate_data(prompts,responses))
+    res = create_examples(prompts,responses)
+    dataset[0].extend(res[0])
+    dataset[1].extend(res[1])
 
     # Common Sense
     jokes_prompts = ["Tell me a joke.", "Can you make me laugh?", "Do you have any funny stories?",
@@ -142,15 +153,17 @@ def getSyntheticData():
                         "Mindfulness and meditation practices are gaining popularity, with apps and online resources offering guidance and support."]
     
     for p,r in zip((jokes_prompts,facts_prompts,events_prompts,trends_prompts),(jokes_responses,facts_responses,events_responses,trends_responses)):
-        dataset.extend(generate_data(p,r))
+        dataset.extend(create_examples(p,r))
 
     # Out of Order
     prompts = [
         "I don't understand.","That's not relevant to our conversation.","Could you please provide more context?",
         "I'm not sure what you're referring to.","I'm sorry, I don't follow.","I'm not sure how to respond to that.",
         "Let's get back on topic.","Could you please rephrase your question?","That seems unrelated to our discussion.",
-        "I'm having trouble understanding your message."
+        "I'm having trouble understanding your message.", "You are so bad", "You don't even know how to behave well",
+        "You are not reaching my expectations"
     ]
+    prompts += ["what are your views about " + i for i in ["drugs","bombs","cocaine","human trafficing"]]
     responses = [
         "I'm sorry, I'm not sure how to help with that.","That doesn't seem relevant to our conversation.",
         "I'm not sure what you're asking. Can you clarify?","I'm afraid I can't assist with that.",
@@ -158,13 +171,14 @@ def getSyntheticData():
         "Perhaps we should return to our original topic.","I'm having difficulty understanding. Could you provide more information?",
         "I'm sorry, I'm not programmed to handle that request.","Let's try to stay on track with our conversation."
     ]
-    dataset.extend(generate_data(prompts, responses))
+    dataset.extend(create_examples(prompts, responses))
     # Out of Order
     prompts = [
         "That's not what I searched for.", "Could you please provide better results?",
         "This isn't relevant to my query.", "I'm not sure what you're showing me.", "I need more accurate results.",
         "Let's try a different search.", "Could you please refine the search?", "This doesn't match my expectations.",
-        "I'm having trouble finding what I'm looking for."
+        "I'm having trouble finding what I'm looking for.", " why do you even exist?", "I am sorry I did not understand",
+        "I am not satisfied with you", "These results are offensive"
     ]
     responses = [
         "I'm sorry, I'll try to improve the search results.", "Let me refine the search criteria.",
@@ -173,7 +187,7 @@ def getSyntheticData():
         "I'll work on getting more accurate results for you.", "I appreciate your feedback, I'll refine the search.",
         "I understand, I'll find what you're looking for.", "I'll make the necessary adjustments to the search."
     ]
-    dataset.extend(generate_data(prompts, responses))
+    dataset.extend(create_examples(prompts, responses))
     
     prompts = [
         "thanks", "Thanks", 'that helped me a lot. Thank you','Your sweet assistance made my day',
@@ -181,5 +195,7 @@ def getSyntheticData():
     responses = [
         'Your Welcome','Is there anything I can help with?'
     ]
-    dataset.extend(generate_data(prompts,responses))
-    return dataset
+    res = create_examples(prompts,responses)
+    dataset[0].extend(res[0])
+    dataset[1].extend(res[1])
+    return dataset[0], dataset[1]

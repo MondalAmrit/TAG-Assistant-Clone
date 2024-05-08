@@ -1,5 +1,5 @@
-from protocol_activator import protocol_map_str
-
+# from protocol_activator import protocol_map_str
+import random
 intentMap = {
     'Volume': 1,
     'Brightness' : 2,
@@ -10,7 +10,7 @@ intentMap = {
 
 def get_dataset(split = 0.9, limit =  None):
     """ Generates the dataset """
-    dataset = []
+    dataset = [[],[]]
     # Open dataset.csv and get it's contents (Not done yet)
     
     # Add Synthetic data generation
@@ -27,11 +27,12 @@ def create_examples( queries,tokens,TAG, split = 0.9 ):
         for t in tokens:
             dataset.append([q.replace('#tkn#',t,1),TAG])
     split_idx = int(len(dataset)*split)
+    random.shuffle(dataset)
     return [dataset[:split_idx],dataset[split_idx:]]
 
 def synthetic_examples_dataset(split = 0.9):
     """ Write down you synthetic examples here """
-    dataset = []
+    dataset = [[],[]]
     # Volume
     queries = ['can you set the volume to #tkn#', 'make the volume to #tkn#', 'put the volume at #tkn#',
                'set the volume to #tkn#','increase the volume by #tkn#','change the volume by #tkn#', 
@@ -40,7 +41,7 @@ def synthetic_examples_dataset(split = 0.9):
             "why don't you leave the volume at #tkn#","volume #tkn#",
             "I want you to make the volume as #tkn#", "I think its better to set the volume to #tkn#",
             "I need the volume to stay at #tkn#", "Why don't you set the volume to #tkn#?"]
-    tokens = list(range(101))
+    tokens = [str(i) for i in range(101)]
     res = create_examples( queries,tokens,'Volume',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
@@ -63,7 +64,7 @@ def synthetic_examples_dataset(split = 0.9):
         "Turn off the laptop", "Shutdown the laptop", "Power off the laptop",
         "I said Shut down the system", "Simply Shutdown", "shutdown","shut down",
         "Just shut down", "Just shutdown", "I want you to shutdown", "Why don't you shutdown?",
-        "Stay off forever"]
+        "Stay off forever", "I need you to be offline forever"]
     tokens = ['']
     res = create_examples( queries,tokens,'Shutdown',split=0.9 )
     dataset[0].extend(res[0])
@@ -81,7 +82,8 @@ def synthetic_examples_dataset(split = 0.9):
     # Restart
     queries = ["Restart the system", "Reboot the computer", "Restart the PC",
         "Restart the device", "Reboot the machine", "Restart the laptop",
-        "Reboot","Restart system", "I want you to restart", "Why don't you restart?"]
+        "Reboot","Restart system", "I want you to restart", "Why don't you restart?",
+        "Make the system go off and come back online", "off and on the system"]
     res = create_examples( queries,tokens,'Restart',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
@@ -196,3 +198,5 @@ def synthetic_examples_dataset(split = 0.9):
     res = create_examples( queries,tokens,'Year',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
+
+    return dataset[0], dataset[1]

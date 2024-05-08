@@ -1,5 +1,5 @@
 import csv, re, random
-from protocol_activator import protocol_map_str
+# from protocol_activator import protocol_map_str
 
 IntentMap = {
     "Current Weather Forecast" : 1,
@@ -11,7 +11,7 @@ IntentMap = {
 
 def get_dataset(split = 0.9, limit =  None):
     """ Generates the dataset """
-    dataset = []
+    dataset = [[],[]]
     # Open dataset.csv and get it's contents (Not done yet)
     
     # Add Synthetic data generation
@@ -29,11 +29,12 @@ def create_examples( queries,tokens,TAG, split = 0.9 ):
         for t in tokens:
             dataset.append([q.replace('#tkn#',t,1),TAG])
     split_idx = int(len(dataset)*split)
+    random.shuffle(dataset)
     return [dataset[:split_idx],dataset[split_idx:]]
 
 def synthetic_examples_dataset(split = 0.9):
     """ Write down you synthetic examples here """
-    dataset = []
+    dataset = [[],[]]
     # Current Weather Forecast
     queries = ['What is the current weather at #tkn#', 'current weather status at #tkn#', 'present weather condition in #tkn#',
                'weather at #tkn#','weather situation at #tkn#','temperature at #tkn#','heat at #tkn#',
@@ -42,7 +43,8 @@ def synthetic_examples_dataset(split = 0.9):
                'wind speed at #tkn#', 'Air Quality at #tkn#',
                'weather of #tkn#', "#tkn#'s weather", "weather of #tkn# today", "#tkn#'s weather report",
                "fetch me the weather report of #tkn#", "give me the weather report of #tkn#", 
-               "why is it so hot in #tkn#?", "why the weather changed suddenly at #tkn#"]
+               "why is it so hot in #tkn#?", "why the weather changed suddenly at #tkn#",
+               "What's the current weather?", "Why don't you get the current wather of #tkn#?"]
     tokens = ['New Delhi','delhi','Mumbai','Kolkata','Chennai','Bangloore','Moscow','New York','Shanghai','Tokyo',
                  'Pune','Hyderabad','Islamabad','Dhaka','columbo','Australia','India','Spain','Morocco',
                  'Paris','England','oslo','toronto','Agra','Lucknow','Muzafar nagar','vijayawada','Guntur',
@@ -80,3 +82,5 @@ def synthetic_examples_dataset(split = 0.9):
     res = create_examples( queries,tokens,'Geo Location',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
+
+    return dataset[0], dataset[1]
