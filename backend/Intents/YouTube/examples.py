@@ -39,7 +39,8 @@ def synthetic_examples_dataset(split = 0.9):
                "DIY home decor", "Latest movie trailers", "Workout routines", "Cake decorating ideas",
                "Photography tips", "Artificial intelligence explained", "Fashion trends", "Budget travel tips",
                "Beginner's guide to cooking", "Learn a new language", "Home workout without equipment",
-               "Productivity hacks", "Music theory basics", "Tech reviews", "Home gardening tips"]
+               "Productivity hacks", "Music theory basics", "Tech reviews", "Home gardening tips",
+               "dsa courses"]
     
     res = create_examples( queries,tokens,'YouTube Search',split=0.9 )
     dataset[0].extend(res[0])

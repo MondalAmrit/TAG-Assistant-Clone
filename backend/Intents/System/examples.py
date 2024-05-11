@@ -74,7 +74,8 @@ def synthetic_examples_dataset(split = 0.9):
     queries = ["Put the system to sleep", "Hibernate the computer", "Sleep the PC",
         "Put the computer to sleep", "Sleep the device", "Hibernate the PC",
         "Put the machine to sleep", "Hibernate the device", "Just put it to sleep",
-        "Why don't you sleep", "Sleep",]
+        "Why don't you sleep", "Sleep", "sleep the system", "I want you to put the system to sleep",
+        "Just simply sleep", "go to sleep","I want you to sleep"]
     res = create_examples( queries,tokens,'Sleep',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
@@ -83,7 +84,9 @@ def synthetic_examples_dataset(split = 0.9):
     queries = ["Restart the system", "Reboot the computer", "Restart the PC",
         "Restart the device", "Reboot the machine", "Restart the laptop",
         "Reboot","Restart system", "I want you to restart", "Why don't you restart?",
-        "Make the system go off and come back online", "off and on the system"]
+        "Make the system go off and come back online", "off and on the system",
+        "restart", "restart the system", "I want you to put the system to restart",
+        "Just simply restart", "go to restart","I want you to restart"]
     res = create_examples( queries,tokens,'Restart',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
@@ -91,7 +94,9 @@ def synthetic_examples_dataset(split = 0.9):
     # Logout
     queries = ["Log out from the system", "Logout from the computer", "Sign out from the PC",
         "Log out from the device", "Logout from the machine", "Sign out from the laptop",
-        "Get me logged out from this device", "I need to logout", "logout"]
+        "Get me logged out from this device", "I need to logout", "logout",
+        "Why don't you logout", "logout the system", "I want you to put the system to logout",
+        "Just Simply logout", "go to logout","I want you to logout"]
     res = create_examples( queries,tokens,'Logout',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])

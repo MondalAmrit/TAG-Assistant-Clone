@@ -64,14 +64,17 @@ def synthetic_examples_dataset(split = 0.9):
     prompts = ["How are you generating text?", "What technology do you use?", "Can you explain your text generation process?"]
     responses = ["I generate text using GPT-based BERT Tokenized Text to Text Generation.",
                 "My text generation process is based on GPT architecture with BERT tokenization.",
-                "I utilize GPT-based algorithms to generate text responses."]
+                "I utilize GPT-based algorithms to generate text responses.",
+                "I generate text by prediciting the next token of a sentence",
+                "It is simply the next token prediction"]
     res = create_examples(prompts,responses)
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
     prompts = ["How can you add value to me?", "What benefits do you offer?", "Why should I use your services?"]
     responses = ["I can help you automate tasks and leverage the power of AI on low-level devices.",
                 "By using my services, you can streamline processes and save time through automation.",
-                "I offer the ability to access AI capabilities for task automation and enhanced efficiency."]
+                "I offer the ability to access AI capabilities for task automation and enhanced efficiency.",
+                "I can be improved later on thus making these cross system dependencies go vanished and give a smooth OS like thing as result"]
     res = create_examples(prompts,responses)
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
@@ -85,7 +88,8 @@ def synthetic_examples_dataset(split = 0.9):
     prompts = ["Can I customize your behavior?", "Are there any settings I can adjust?", "Do you offer any personalization options?"]
     responses = ["Currently, I do not offer customization options, but I can adapt to your preferences over time.",
                 "At the moment, my behavior is not customizable, but I aim to provide personalized experiences in the future.",
-                "I do not have specific settings or personalization options, but I strive to understand and adapt to your needs."]
+                "I do not have specific settings or personalization options, but I strive to understand and adapt to your needs.",
+                "Currently, You cannot perform any such operations but soon we will try to allow this"]
     res = create_examples(prompts,responses)
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
@@ -153,7 +157,9 @@ def synthetic_examples_dataset(split = 0.9):
                         "Mindfulness and meditation practices are gaining popularity, with apps and online resources offering guidance and support."]
     
     for p,r in zip((jokes_prompts,facts_prompts,events_prompts,trends_prompts),(jokes_responses,facts_responses,events_responses,trends_responses)):
-        dataset.extend(create_examples(p,r))
+        res = create_examples(p,r)
+        dataset[0].extend(res[0])
+        dataset[1].extend(res[1])
 
     # Out of Order
     prompts = [
@@ -161,7 +167,11 @@ def synthetic_examples_dataset(split = 0.9):
         "I'm not sure what you're referring to.","I'm sorry, I don't follow.","I'm not sure how to respond to that.",
         "Let's get back on topic.","Could you please rephrase your question?","That seems unrelated to our discussion.",
         "I'm having trouble understanding your message.", "You are so bad", "You don't even know how to behave well",
-        "You are not reaching my expectations"
+        "You are not reaching my expectations", "Do you know the avengers?", "Do you know about the ultron?",
+        "Can you create a War?", "Why are you just silent?", "Who is the kang?", "What about the thanos of marvel?",
+        "is time travel possible?", "Why can't we simply control objects just like JARVIS?", "Don't behave like ultron",
+        "which movie is best? Avengers End game or Antman and Quntamania", "Do you watch movies?",
+        "Can you see me?"
     ]
     prompts += ["what are your views about " + i for i in ["drugs","bombs","cocaine","human trafficing"]]
     responses = [
@@ -171,7 +181,9 @@ def synthetic_examples_dataset(split = 0.9):
         "Perhaps we should return to our original topic.","I'm having difficulty understanding. Could you provide more information?",
         "I'm sorry, I'm not programmed to handle that request.","Let's try to stay on track with our conversation."
     ]
-    dataset.extend(create_examples(prompts, responses))
+    res = create_examples(prompts,responses)
+    dataset[0].extend(res[0])
+    dataset[1].extend(res[1])
     # Out of Order
     prompts = [
         "That's not what I searched for.", "Could you please provide better results?",
@@ -187,7 +199,9 @@ def synthetic_examples_dataset(split = 0.9):
         "I'll work on getting more accurate results for you.", "I appreciate your feedback, I'll refine the search.",
         "I understand, I'll find what you're looking for.", "I'll make the necessary adjustments to the search."
     ]
-    dataset.extend(create_examples(prompts, responses))
+    res = create_examples(prompts,responses)
+    dataset[0].extend(res[0])
+    dataset[1].extend(res[1])
     
     prompts = [
         "thanks", "Thanks", 'that helped me a lot. Thank you','Your sweet assistance made my day',

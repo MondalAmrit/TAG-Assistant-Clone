@@ -78,7 +78,7 @@ def synthetic_examples_dataset(split = 0.9):
     # Geo - location
     queries = ['get the co ordinates of #tkn#', 'co-ords of #tkn#','latitude and longitude of #tkn#','location of #tkn#',
                'geo location of #tkn#', 'I need the co-ords of #tkn#', 'where is #tkn# located?',
-               'I need the location of #tkn#', 'find the location of #tkn#',]
+               'I need the location of #tkn#', 'find the location of #tkn#', "#tkn# location?"]
     res = create_examples( queries,tokens,'Geo Location',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])

@@ -42,7 +42,10 @@ def synthetic_examples_dataset(split = 0.9):
                     "Clarify the significance of #tkn#","I want to know more about #tkn#","Unravel the mysteries of #tkn#",
                     "Educate me on #tkn#","Could you elucidate #tkn#","Brief me on #tkn#","Give me an overview of #tkn#",
                     "I'm eager to discover #tkn#","Could you provide some background on #tkn#","Let's delve into the details of #tkn#",
-                    "Enlighten me about #tkn#","Elaborate on #tkn#",]
+                    "Enlighten me about #tkn#","Elaborate on #tkn#",
+                "Internet Search for #tkn#", "Search online for #tkn#", "Search in chrome for #tkn#",
+                "Search on bing for #tkn#", "search on edge for #tkn#", "Why don't you search for #tkn# in the internet?",
+                "Why don't you search #tkn# in chrome", "#tkn# in internet"]
     tokens = ["climate change", "artificial intelligence", "COVID-19?", "space exploration", "renewable energy", "ancient civilizations", "famous scientists", "global economic trends", "theory of relativity", "effects of deforestation",
                 "the mysteries of the deep sea", "how to open django website?", "how to host a python code?",
                 "how to get rid of the bugs?",
@@ -71,7 +74,7 @@ def synthetic_examples_dataset(split = 0.9):
                 'Navigate to #tkn#', 'Launch #tkn#', 'Go to #tkn#', 'Visit #tkn#', 'Access #tkn#', 'Take me to #tkn#', 
                 'Direct me to #tkn#', 'Load #tkn#', 'Explore #tkn#', 'Check out #tkn#', 'I want you to open #tkn#', "Why don't you open #tkn#?",
                 "show me the #tkn#", "I want you to open #tkn#", "Hey, Why don't you open #tkn# ?", "Just open the #tkn#",
-                "Open #tkn# in a browser"]
+                "Open #tkn# in a browser", "Quickly open the #tkn#"]
     tokens = ['leetcode', 'linkedin', 'amazon', 'github', 'google', 'gmail', 'geeksforgeeks', 'stackoverflow', 'netflix', 'codechef',
                 'youtube', 'facebook', 'twitter', 'instagram', 'wikipedia', 'reddit', 'quora', 'ebay', 'microsoft', 'apple',
                 'spotify', 'bbc', 'cnn', 'nytimes', 'yahoo', 'bing', 'wordpress', 'pinterest', 'dropbox', 'twitch']
