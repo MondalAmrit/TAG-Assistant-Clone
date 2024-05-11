@@ -41,9 +41,10 @@ def check_cmd(query: str):
     if (cmd[0] != '@'):
         intent = intentMapIdxtoVal[BERTmodel.predict(query.lower())]
         if intent == "BasicChat":
-            return GPTmodel.generate(query)
+            return {'isResponse':True, 'response':GPTmodel.generate(query)}
         else:
-            return f'Intent recognized as "{intent}"'
+            return {'isResponse':False, 'response':intent}
     else:
         # Execute the function.
-        return f'{query.split()[0][0:]} is called'
+        return {'isResponse':False, 'response': query.split()[0][1:]}
+        # return f'{query.split()[0][0:]} is called'

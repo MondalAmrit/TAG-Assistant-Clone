@@ -12,6 +12,8 @@ export default function SimpleChat() {
   const [prompt, setPrompt] = useState("");
   const [bgClr, setBgClr] = useState("");
   const [generating, setGenerating] = useState(false);
+  const [actionMsg, setActionMsg] = useState('');
+
   const sendMsg = async () => {
     if (prompt === "") return;
     let msgObj = { user: true, msg: prompt, time: Date.now() };
@@ -29,11 +31,20 @@ export default function SimpleChat() {
       },
       body: JSON.stringify({ query: prompt }),
     })
-      .then((resp) => resp.json())
-      .then((resp) => resp["response"]);
-    setGenerating(false);
-    msgObj = { user: false, msg: res, time: Date.now() };
-    setConversations((conversation) => [...conversation, msgObj]);
+      .then((resp) => resp.json());
+    
+      if (res['status'] == true) {
+        if (res['isResponse']) {
+          setGenerating(false);
+          msgObj = { user: false, msg: res['response'], time: Date.now() };
+          setConversations((conversation) => [...conversation, msgObj]);
+        } else {
+          setGenerating(false);
+          setActionMsg(res['response']);
+        }
+      } else {
+        alert(res['msg'])
+      }
   };
   const shapesColors = [
     "10,10,210,",
@@ -98,7 +109,7 @@ export default function SimpleChat() {
           <input
             type="text"
             className="ChatLabelBox"
-            defaultValue="Untitled0"
+            defaultValue="Label this conversation"
           />
           <div className="settingsOption"> Settings </div>
         </div>
@@ -137,31 +148,23 @@ export default function SimpleChat() {
               </div>
             </div>
           )}
+          {actionMsg !== '' && (
+            <div className="actionContainer">
+              <div className="actionName">{actionMsg}</div>
+              <div className="actionBtns">
+                <div className="actionBtn" onClick={()=>{setActionMsg('');}}> Execute </div>
+                <div className="actionBtn" onClick={()=>{setActionMsg('');}} style={{color:'red'}}> Cancel </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Bottom Input Box */}
         <div className="bottomSection">
-          <input
-            type="text"
-            className="PromptInput"
-            placeholder="Type here /"
-            value={prompt}
-            onKeyDown={(e) => {
-              enterClicked(e.key);
-            }}
-            onChange={(e) => {
-              setPrompt(e.target.value);
-            }}
+          <input type="text" className="PromptInput" placeholder="Type here /" value={prompt}
+            onKeyDown={(e) => {enterClicked(e.key)}} onChange={(e) => {setPrompt(e.target.value)}}
           />
-          <div
-            className="sendBtn"
-            onClick={() => {
-              sendMsg();
-            }}
-          >
-            {" "}
-            Send{" "}
-          </div>
+          <div className="sendBtn" onClick={() => {sendMsg()}}>{" "} Send {" "} </div>
         </div>
       </div>
     </div>

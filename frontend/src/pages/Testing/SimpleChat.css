@@ -130,6 +130,41 @@
     background-color: black;    color: white;   cursor: pointer;
 }
 
+.actionContainer {
+    display: flex;  align-items: flex-start;    justify-content: flex-start;
+    flex-direction: column;
+
+    width: fit-content;    min-width: 280px;   max-width: 70%; gap: 10px;   padding: 10px;
+    height: auto;
+
+    box-shadow: 0 0 40px rgba(40,40,40,0.3);
+    background-color: rgba(230,230,230,0.8);    color: black;   border-radius: 10px;
+}
+
+.actionName {
+    display: flex;  align-items: center;    justify-content: center;
+    
+    width: 100%;    height: auto;
+
+    font-size: 20px;
+}
+
+.actionBtns {
+    display: flex;  align-items: flex-start;    justify-content: space-evenly;
+    flex-direction: row;    flex-wrap: wrap;
+
+    width: 100%;    height: auto;   padding: 10px;  gap: 5px;
+}
+
+.actionBtn {
+    display: flex;  align-items: center;    justify-content: center;
+    
+    width: 120px;   min-width: 120px;   height: 40px;
+
+    border-radius: 10px;    border: 2px solid;
+    color: green;   cursor: pointer;
+}
+
 @media only screen and (max-width: 800px) {
     .TopSection {flex-wrap: wrap;   height: auto;}
 }
