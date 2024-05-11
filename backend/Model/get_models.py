@@ -10,7 +10,7 @@ from Model.BERT_Classification_Model.pre_processing import config as bert_config
 
 print('Downloading the GPT model...')
 GPTmodel = GPT(config)
-GPTmodel.load_state_dict( torch.load('./Model/state_dicts/fine_tuned_TAG_v_0_state_dict.pt',map_location='cpu') )
+GPTmodel.load_state_dict( torch.load('./Model/state_dicts/fine_tuned_TAG_v_1_state_dict.pt',map_location='cpu') )
 GPTmodel.eval()
 print('Downloading the BERT model...')
 BERTmodel = BERTForClassification(bert_config)

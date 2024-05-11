@@ -13,6 +13,30 @@ export default function SimpleChat() {
   const [bgClr, setBgClr] = useState("");
   const [generating, setGenerating] = useState(false);
   const [actionMsg, setActionMsg] = useState('');
+  const [executorLoading, setExecutorLoading] = useState(false);
+
+  const execute_intent = async () => {
+    if (actionMsg === '') return;
+    setExecutorLoading(true);
+    // Send the message to backend
+    const res = await fetch("http://127.0.0.1:8000/api/v1/executeIntent", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ query: actionMsg }),
+    })
+      .then((resp) => resp.json());
+    
+      if (res['status'] == true) {
+        if (res['isResponse']) {
+          let msgObj = { user: false, msg: res['response'], time: Date.now() };
+          setConversations((conversation) => [...conversation, msgObj]);
+        }
+      } else {alert(res['response'])}
+      setActionMsg('');
+      setExecutorLoading(false);
+  }
 
   const sendMsg = async () => {
     if (prompt === "") return;
@@ -43,7 +67,7 @@ export default function SimpleChat() {
           setActionMsg(res['response']);
         }
       } else {
-        alert(res['msg'])
+        alert(res['response'])
       }
   };
   const shapesColors = [
@@ -151,10 +175,13 @@ export default function SimpleChat() {
           {actionMsg !== '' && (
             <div className="actionContainer">
               <div className="actionName">{actionMsg}</div>
+              {
+                executorLoading ? 'executing...' :
               <div className="actionBtns">
-                <div className="actionBtn" onClick={()=>{setActionMsg('');}}> Execute </div>
-                <div className="actionBtn" onClick={()=>{setActionMsg('');}} style={{color:'red'}}> Cancel </div>
+                <div className="actionBtn" onClick={()=>{execute_intent()}}> Execute </div>
+                <div className="actionBtn" onClick={()=>{setActionMsg('')}} style={{color:'red'}}> Cancel </div>
               </div>
+              }
             </div>
           )}
         </div>

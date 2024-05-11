@@ -8,7 +8,7 @@ https://www.weatherapi.com/my/
 import os, requests, pprint
 
 base_url = f"http://api.weatherapi.com/v1/"
-add_url = f".json?key={os.environ['weather_api']}"
+add_url = f".json?key={os.getenv('weather_api')}"
 
 def get_current(Location):
     return requests.get(base_url + 'current' + add_url + f'&q={Location}&aqi=yes').json()

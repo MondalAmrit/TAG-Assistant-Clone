@@ -1,12 +1,8 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
 from cmd_executor import check_cmd
+from action_executor import executor
 router = APIRouter()
-
-class ArgsResponse(BaseModel):
-    query_id: str
-    arg: str
-    value: str
 
 @router.post('/intentResponse',tags=['IntentResponse'])
 def generate_reponse(query: dict):
@@ -17,6 +13,12 @@ def generate_reponse(query: dict):
     except:
         return {'status': False, 'response':'Internal Server Error'}
 
-@router.post('/argsResponse')
-def args_response(resp: ArgsResponse):
-    return {'status':True,'response':'This will handle the case where input is needed.', 'Your Input':resp}
+@router.post('/executeIntent', tags=['Execute Intent'])
+def execute_intent(query: dict):
+    try:
+        print(query)
+        print('calling the intent ',query['query'])
+        res = executor(query['query'])
+        return {'status': True, 'isResponse': res != None, 'response': res}
+    except:
+        return {'status': False, 'response': 'Internal Server Error'}
