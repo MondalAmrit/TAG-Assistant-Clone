@@ -18,6 +18,27 @@ But Actually you can do much more than that :)
 User interacts with the AI using the chat. <br />
 Based on the user prompts the Ai will decide the response along with the protocol to run.
 
+# Technical Details
+ - It contains 3 models
+    - [x] BERT for Classification
+    - [x] GPT for text generation
+    - [ ] BERT for Slot Filling
+ - Classification model will classify which class to execute
+ - If the class is `Basic Chat` then GPT model will work
+ - Else `BERT Slot Filling` will extract the arguments from user prompt. Then passes it to action specified.
+
+ # What do you mean by an Intent?
+  - Intent Contains `examples` and `actions`
+  - `actions` contains the functions (even another model) to be executed
+  - `examples` contains the most likely prompts to call this aciton
+  - In short, `Intent` contains the most relevent actions and examples at one place.
+
+# Current Problems
+ - [ ] Why Models are having so poor performance ?
+ - [ ] Slot Filling model implementation
+ - [ ] Dataset Quality
+ - [ ] Poor Frontend
+
 # Installation and Usage
 For Installation setup refer [here](docs/installation.md) <br />
 For Usage setup refer [here](docs/usage.md) <br />
