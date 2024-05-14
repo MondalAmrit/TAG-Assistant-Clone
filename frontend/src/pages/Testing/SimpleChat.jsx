@@ -13,6 +13,7 @@ export default function SimpleChat() {
   const [bgClr, setBgClr] = useState("");
   const [generating, setGenerating] = useState(false);
   const [actionMsg, setActionMsg] = useState('');
+  const [actionArgs, setActionArgs] = useState('');
   const [executorLoading, setExecutorLoading] = useState(false);
 
   const execute_intent = async () => {
@@ -24,7 +25,7 @@ export default function SimpleChat() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ query: actionMsg }),
+      body: JSON.stringify({ query: actionMsg, actionArgs: actionArgs  }),
     })
       .then((resp) => resp.json());
     
@@ -53,7 +54,7 @@ export default function SimpleChat() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ query: prompt }),
+      body: JSON.stringify({ query: prompt}),
     })
       .then((resp) => resp.json());
     
@@ -65,6 +66,7 @@ export default function SimpleChat() {
         } else {
           setGenerating(false);
           setActionMsg(res['response']);
+          setActionArgs(res['args']);
         }
       } else {
         alert(res['response'])
@@ -175,6 +177,7 @@ export default function SimpleChat() {
           {actionMsg !== '' && (
             <div className="actionContainer">
               <div className="actionName">{actionMsg}</div>
+              <input type="text" className="actionArgsInpBox" onChange={(e) => {setActionArgs(e.target.value);}} value={actionArgs} />
               {
                 executorLoading ? 'executing...' :
               <div className="actionBtns">

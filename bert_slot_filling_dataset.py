@@ -27,14 +27,17 @@ slot_tokens = {
 }
 
 # Load the tokenizer (BERT)
-# Add Some Special tokens
 special_tokens = ['[QUES]']
-for v in slot_tokens.values():
-    special_tokens.extend(v)
 tokenizer = BertTokenizerFast.from_pretrained('bert-base-uncased')
 if len(special_tokens) > 0:
     tokenizer.add_special_tokens({'additional_special_tokens': special_tokens})
 vocab_size = tokenizer.vocab_size + len(special_tokens)
+
+# Slot tokens
+slot_token_lst = ['[NTG]']
+for v in slot_tokens.values():
+    slot_token_lst.extend(v)
+
 print('Vocab Size is:', vocab_size)
 
 # Define the dataset conversion
@@ -49,7 +52,7 @@ def create_examples(data, slot_type, split = 0.9):
         # Remember to add [CLS] : 101  and [SEP] : 102
         inp = [101] + pref + slot + suff + [102]
         B_slot, I_slot = slot_tokens[slot_type]
-        slot = tokenizer.encode(B_slot, add_special_tokens = False) + tokenizer.encode(I_slot, add_special_tokens = False) * max(0,len(slot)-1)
+        slot = [slot_token_lst.index(B_slot)] + [slot_token_lst.index(I_slot)] * max(0,len(slot)-1)
         tgt = [0]*(len(pref) + 1) + slot + [0]*(len(suff) + 1) # 1 is for [CLS] and [SEP]
         dataset.append([inp,tgt])
     random.shuffle(dataset)
@@ -71,7 +74,6 @@ def generate_synthetic_data(split = 0.9):
     prefixes = ['set the volume to ', 'set the brightness to ', "Why don't you make the volume to ",
                 "Why don't you make the brightness to ", "Increase the volume by ", "Decrease the volume by ",
                 "Increase the volume by ", "Decrease the volume by "]
-    # slots = list(range(101))
     slots = ['10','15','12','23','45','74']
     suffixes = ['']
     res = combine_data(prefixes, slots, suffixes, 'Quantity', split)
@@ -113,14 +115,29 @@ pprint.pprint(train_data[:5])
 print('Testing Examples:')
 pprint.pprint(test_data[:5])
 
+def slot_decode( lst ):
+    res = ''
+    for idx in lst:
+        if idx < len(slot_token_lst) and idx > 0:
+           res += ' ' + slot_token_lst[idx]
+        else:
+           res += ' [NTG]'
+    return res
+
+def extract_slot( pred, dec ):
+    assert len(pred) == len(dec)
+    res = []
+    for i in range(len(dec)):
+        # Single slot assumed
+        if dec[i] < len(slot_token_lst) and dec[i] > 0 and dec[i] != 0:
+            res.append(pred[i])
+    return res
+
 print('\n\nExample of this conversion:')
-print([tokenizer.decode(train_data[0][0]), tokenizer.decode(train_data[0][1])])
+print([tokenizer.decode(train_data[0][0]), slot_decode(train_data[0][1])])
+print(tokenizer.decode(extract_slot(train_data[0][0], train_data[0][1])))
 
 print('\nWriting to csv files')
 for i in ('train','val'):
     with open(f'C://users/Anirudh/Desktop/TAG_slot_filling_v0_{i}.csv','w', newline='') as f:
-        writer = csv.writer(f)
-        if i == 'train':
-            writer.writerows(train_data)
-        else:
-            writer.writerows(test_data)
+        csv.writer(f).writerows(train_data if i == 'train' else test_data)

@@ -18,7 +18,7 @@ def execute_intent(query: dict):
     try:
         print(query)
         print('calling the intent ',query['query'])
-        res = executor(query['query'])
+        res = executor(query['query'],query['actionArgs'])
         return {'status': True, 'isResponse': res != None, 'response': res}
     except:
         return {'status': False, 'response': 'Internal Server Error'}

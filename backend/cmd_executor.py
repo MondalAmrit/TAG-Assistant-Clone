@@ -1,4 +1,4 @@
-from Model.get_models import GPTmodel, BERTmodel
+from Model.get_models import GPTmodel, BERTmodel, BERTSlotFilling
 
 #####################################
 # Works like a CMD from chat UI
@@ -43,8 +43,8 @@ def check_cmd(query: str):
         if intent == "BasicChat":
             return {'isResponse':True, 'response':GPTmodel.generate(query)}
         else:
-            return {'isResponse':False, 'response':intent}
+            return {'isResponse':False, 'response':intent, 'args': BERTSlotFilling.predict(query)}
     else:
         # Execute the function.
-        return {'isResponse':False, 'response': query.split()[0][1:]}
+        return {'isResponse':False, 'response': query.split()[0][1:], 'args': ''}
         # return f'{query.split()[0][0:]} is called'
