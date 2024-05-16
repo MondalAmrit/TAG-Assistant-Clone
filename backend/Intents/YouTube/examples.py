@@ -33,7 +33,8 @@ def synthetic_examples_dataset(split = 0.9):
                "search for videos related to #tkn#", "I need videos related to #tkn#", "videos realted to #tkn#",
                "videos of #tkn#", "play #tkn# on youtube", "I think its better if you can search for #tkn# on YouTube",
                "Show me the videos similar to #tkn#", "Youtube search about #tkn#", "online videos on #tkn#", "YT shorts of #tkn#",
-               "search any videos with tag #tkn#", "Youtube video about #tkn#"]
+               "search any videos with tag #tkn#", "Youtube video about #tkn#","#tkn# videos","#tkn# youtube",
+                "YouTube #tkn#",'#tkn# in YouTube']
     tokens = ['funny', 'jokes', 'python tutorials', 'java tutorials', 'c tutorials', 'breakfast', ' travel', 'vlogs',
               'Photography', "How to tie a tie", "Python tutorial", "Funny cat videos", "Healthy breakfast recipes", "Travel vlogs",
                "DIY home decor", "Latest movie trailers", "Workout routines", "Cake decorating ideas",

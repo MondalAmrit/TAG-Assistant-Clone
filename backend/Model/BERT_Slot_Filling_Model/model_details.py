@@ -12,25 +12,19 @@ slot_tokens = {
     "Quantity" : ['B-Qty','I-Qty'],
     "Datetime": ['B-Datetime','I-Datetime'],
 }
-slot_token_lst = []
+slot_token_lst = ['[PAD]','[UNK]']
 for v in slot_tokens.values():
     slot_token_lst.extend(v)
     
 def slot_decode( lst ):
-    res = ''
-    for idx in lst:
-        if idx < len(slot_token_lst) and idx > 0:
-           res += ' ' + slot_token_lst[idx]
-        else:
-           res += ' [NTG]'
-    return res
+    return ' '.join([slot_token_lst[idx] if idx < len(slot_token_lst) and idx > 0 else '[UNK]' for idx in lst])
 
 def extract_slot( pred, dec ):
     assert len(pred) == len(dec)
     res = []
     for i in range(len(dec)):
         # Single slot assumed
-        if dec[i] < len(slot_token_lst) and dec[i] > 0 and dec[i] != 0:
+        if dec[i] < len(slot_token_lst) and dec[i] > 1 and pred[i] != 0:
             res.append(pred[i])
     return res
 
@@ -101,11 +95,10 @@ class BERT(nn.Module):
         self.tok_embed = nn.Embedding(config.vocab_size, config.d_model)  # token embedding
         self.pos_embed = nn.Embedding(config.seq_len, config.d_model)  # position embedding
         self.blocks = nn.ModuleList([Block(config) for _ in range(config.num_layers)])
-        self.ln = LayerNorm(config.d_model,config.bias)
         self.seq_len, self.drop = config.seq_len, nn.Dropout(config.dropout)
     def forward(self, x, attn_mask = None):
         # x : (Batch_Size, Seq_len)    # targets : (Batch_Size, Seq_len)
-        B, S = x.shape
+        S = x.shape[-1]
         x = self.drop(self.tok_embed(x) + self.pos_embed(torch.arange(0, S, device = x.device)))
         for module in self.blocks:   x = module(x, attn_mask)
         return x
@@ -117,19 +110,22 @@ class BERTForSlotFilling(nn.Module):
     def __init__(self, config):
         super().__init__()
         self.bert = BERT(config)
-        self.out_proj = nn.Linear(config.d_model,config.num_slots, bias = config.bias)
+        self.drop = nn.Dropout(config.dropout)
+        self.out_proj = nn.Linear(config.d_model,config.num_slots)
         self.seq_len = config.seq_len
     def forward(self, x, attn_mask = None, tgt = None):
         # No dropout layer is being considered here
         if attn_mask == None:     attn_mask = (x == 0)  # Attention mask is created based on [PAD] tokens
-        logits = self.out_proj( self.bert( x, attn_mask ) )
+        logits = self.out_proj( self.drop(self.bert( x, attn_mask )) )
         if tgt != None:
-            B,S,V = logits.shape
-            loss = F.cross_entropy( logits.view(B*S,V),tgt.view(B*S).long() )
+            V = logits.shape[-1]
+            loss = F.cross_entropy( logits.view(-1,V),tgt.view(-1).long(),ignore_index=0 )
             return logits, loss
         return logits
+    
     @property
     def device(self):   return next(self.parameters()).device
+    
     @torch.no_grad()
     def predict(self, x):  # x : (Seq Len)
         global tokenizer

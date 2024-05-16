@@ -34,7 +34,7 @@ if len(special_tokens) > 0:
 vocab_size = tokenizer.vocab_size + len(special_tokens)
 
 # Slot tokens
-slot_token_lst = ['[NTG]']
+slot_token_lst = ['[PAD]','[UNK]']
 for v in slot_tokens.values():
     slot_token_lst.extend(v)
 
@@ -53,7 +53,7 @@ def create_examples(data, slot_type, split = 0.9):
         inp = [101] + pref + slot + suff + [102]
         B_slot, I_slot = slot_tokens[slot_type]
         slot = [slot_token_lst.index(B_slot)] + [slot_token_lst.index(I_slot)] * max(0,len(slot)-1)
-        tgt = [0]*(len(pref) + 1) + slot + [0]*(len(suff) + 1) # 1 is for [CLS] and [SEP]
+        tgt = [1]*(len(pref) + 1) + slot + [1]*(len(suff) + 1) # 1 is for [CLS] and [SEP] and [1] is [UNK] in slot
         dataset.append([inp,tgt])
     random.shuffle(dataset)
     split_idx = int(len(dataset)*split)
@@ -73,8 +73,9 @@ def generate_synthetic_data(split = 0.9):
     # Qty Examples
     prefixes = ['set the volume to ', 'set the brightness to ', "Why don't you make the volume to ",
                 "Why don't you make the brightness to ", "Increase the volume by ", "Decrease the volume by ",
-                "Increase the volume by ", "Decrease the volume by "]
-    slots = ['10','15','12','23','45','74']
+                "Increase the volume by ", "Decrease the volume by ","volume ","brightness ",
+                "make the screen dim to ","dim the screen by "]
+    slots = ['10','15','12','23','45','74','73','56','21']
     suffixes = ['']
     res = combine_data(prefixes, slots, suffixes, 'Quantity', split)
     train_dataset.extend(res[0])
@@ -85,11 +86,47 @@ def generate_synthetic_data(split = 0.9):
                 'generate images for ','Search for images related to ', 'I want images of the ',
                 'search for related video ']
     slots = ['Ai','Python','Java','home tutorials','how to play chess','how earn money faster',
-             "DIY tips and tricks",'how to foucs on study?','cooking']
+             "DIY tips and tricks",'how to foucs on study?','cooking',
+             ]
     suffixes = ['']
     res = combine_data(prefixes, slots, suffixes, 'Query', split)
     train_dataset.extend(res[0])
     test_dataset.extend(res[1])
+
+    # Youtube Search Queries
+    prefixes = ["Show me videos regarding ",
+               "search for videos related to ", "I need videos related to ", "videos realted to ",
+               "videos of ", "Show me the videos similar to ", "Youtube search about ", "online videos on ", "YT shorts of ",
+               "search any videos with tag ", "Youtube video about ","youtube ","YouTube "]
+    slots = ['funny', 'jokes', 'python tutorials', 'java tutorials', 'c tutorials', 'breakfast', ' travel', 'vlogs',
+              'Photography', "How to tie a tie", "Python tutorial", "Funny cat videos", "Healthy breakfast recipes", "Travel vlogs",
+               "DIY home decor", "Latest movie trailers", "Workout routines", "Cake decorating ideas",
+               "Photography tips", "Artificial intelligence explained", "Fashion trends", "Budget travel tips",
+               "Beginner's guide to cooking", "Learn a new language", "Home workout without equipment",
+               "Productivity hacks", "Music theory basics", "Tech reviews", "Home gardening tips",
+               "dsa courses", "comedy videos"]
+    suffixes = ['']
+    res = combine_data(prefixes, slots, suffixes, 'Query', split)
+    train_dataset.extend(res[0])
+    test_dataset.extend(res[1])
+    
+    # Image Search Queries
+    prefixes = ["Give me an image of a", "Image of a", "Show me pictures of", "Find me an image of a tropical", "I need a picture of a mountain", 
+               "Can you provide an image of a", "I'm looking for pictures of", "Image search:", "Please show me photos of", 
+               "Find an image related to", "search this image", "images of ", "I need images for ", "related images for ",
+               "Give me the images of ", "get the image results for "]
+    slots = ["cat", "sunset", "dogs", "tropical beach", "mountain landscape", "happy family", "famous landmarks", "beautiful flowers", "city skylines", "technology",
+                  "human","rats","college","metro","flights","auto",'cab','car','comb','cost','country','currency','note','book',
+                  'comics']
+    res = combine_data(prefixes, slots, suffixes, 'Query', split)
+    train_dataset.extend(res[0])
+    test_dataset.extend(res[1])
+    
+    prefixes = ['search ','get ']
+    res = combine_data(prefixes, slots, suffixes, 'Query', split)
+    train_dataset.extend(res[0])
+    test_dataset.extend(res[1])
+
     prefixes = ['I want you to search for ', 'search for related videos of ', ]
     suffixes = ['on internet', 'on Youtube', 'on Google',]
     res = combine_data(prefixes, slots, suffixes, 'Query', split)
@@ -102,6 +139,20 @@ def generate_synthetic_data(split = 0.9):
     slots = ['Alan Walker','Justin Biber', 'A R Rahman','Arijit Singh', 'Sonu Nigam']
     suffixes = ['']
     res = combine_data(prefixes, slots, suffixes, 'Query', split)
+    train_dataset.extend(res[0])
+    test_dataset.extend(res[1])
+
+    # Location Related
+    prefixes = ['get the co ordinates of ', 'co-ords of ','latitude and longitude of ','location of ',
+               'geo location of ', 'I need the co-ords of ',
+               'I need the location of ', 'find the location of ', 'Location ','location ']
+    slots = ['New Delhi','delhi','Mumbai','Kolkata','Chennai','Bangloore','Moscow','New York','Shanghai','Tokyo',
+                 'Pune','Hyderabad','Islamabad','Dhaka','columbo','Australia','India','Spain','Morocco',
+                 'Paris','England','oslo','toronto','Agra','Lucknow','Muzafar nagar','vijayawada','Guntur',
+                 'Vishakapatnam','Vellore','tirupati','jammu','kashmir','china','pakistan','egypt',
+                 'isarel','saudi arabia']
+    suffixes = ['']
+    res = combine_data(prefixes, slots, suffixes, 'Location', split)
     train_dataset.extend(res[0])
     test_dataset.extend(res[1])
 
@@ -121,7 +172,7 @@ def slot_decode( lst ):
         if idx < len(slot_token_lst) and idx > 0:
            res += ' ' + slot_token_lst[idx]
         else:
-           res += ' [NTG]'
+           res += ' [UNK]'
     return res
 
 def extract_slot( pred, dec ):
@@ -133,6 +184,7 @@ def extract_slot( pred, dec ):
             res.append(pred[i])
     return res
 
+print('Slots Identified:',len(slot_token_lst))
 print('\n\nExample of this conversion:')
 print([tokenizer.decode(train_data[0][0]), slot_decode(train_data[0][1])])
 print(tokenizer.decode(extract_slot(train_data[0][0], train_data[0][1])))

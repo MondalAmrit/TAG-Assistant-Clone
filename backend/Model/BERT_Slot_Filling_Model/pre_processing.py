@@ -8,16 +8,16 @@ class Hyperparameters:
     d_model: int = 128
     num_heads: int = 4
     num_layers: int = 8
-    num_classes: int = 25 # In real deployment set it via coding
-    num_slots: int = 8
     
     # Secondary structure deciding params
     dropout: float = 0.1
     seq_len: int =  64 # 256 # 128
     vocab_size: int = 15000
-    batch_size: int = 64 # 128
+    num_classes: int = 25
+    num_slots: int = 10
+    batch_size: int = 32 # 64 # 128
     gradient_acc_steps: int = 0
-    bias: bool = True
+    bias: bool = False
     
     # Data set control params
     split: float = 0.95
@@ -37,7 +37,7 @@ class Hyperparameters:
     lr: float = 1e-3
     warmup_iters: int = 2000
     lr_decay_iters: int = 600_000   
-    min_lr: float = 1e-4
+    min_lr: float = 1e-3
     decay_lr: bool = True
 # Create an instance of the Hyperparameters data class with the provided values
 config = Hyperparameters()

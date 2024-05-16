@@ -40,11 +40,12 @@ def synthetic_examples_dataset(split = 0.9):
                'weather at #tkn#','weather situation at #tkn#','temperature at #tkn#','heat at #tkn#',
                'temperature in celsius at #tkn#','temperature in fahrenheit at #tkn#',
                'temperature in #tkn#','humidity at #tkn#','humidity in #tkn#','moisture at #tkn#',
-               'wind speed at #tkn#', 'Air Quality at #tkn#',
+               'wind speed at #tkn#', 'Air Quality at #tkn#', "today's weather at #tkn# ?",
                'weather of #tkn#', "#tkn#'s weather", "weather of #tkn# today", "#tkn#'s weather report",
                "fetch me the weather report of #tkn#", "give me the weather report of #tkn#", 
                "why is it so hot in #tkn#?", "why the weather changed suddenly at #tkn#",
-               "What's the current weather?", "Why don't you get the current wather of #tkn#?"]
+               "What's the current weather?", "Why don't you get the current wather of #tkn#?",
+               "current weather forecase of #tkn#"]
     tokens = ['New Delhi','delhi','Mumbai','Kolkata','Chennai','Bangloore','Moscow','New York','Shanghai','Tokyo',
                  'Pune','Hyderabad','Islamabad','Dhaka','columbo','Australia','India','Spain','Morocco',
                  'Paris','England','oslo','toronto','Agra','Lucknow','Muzafar nagar','vijayawada','Guntur',
@@ -60,7 +61,8 @@ def synthetic_examples_dataset(split = 0.9):
                'next 3 days weather report of #tkn#','tommorrow weather condition at #tkn#',
                'tommorow temperature at #tkn#','what would be the weather condition at #tkn# tommorrow?',
                'give me the future forecast of #tkn#', 'upcomming weather changes of #tkn#',
-               "I need day after tommorrow's weather report for #tkn#", "why don't you give me the future weather forecast for #tkn#"] 
+               "I need day after tommorrow's weather report for #tkn#", "why don't you give me the future weather forecast for #tkn#",
+               "future weather forecast of #tkn#"] 
     res = create_examples( queries,tokens,'Future Weather Forecast',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])

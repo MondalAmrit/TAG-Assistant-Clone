@@ -19,9 +19,9 @@ def get_dataset(split = 0.9, limit =  None):
 def create_examples(prompts, responses, TAG = 'BasicChat', split= 0.9 ):
     """ Creates dataset for the given actions based on queries and tokens """
     dataset = []
-    for prompt in prompts:  
-        for response in responses:  
-            dataset.append([prompt, response ,TAG])
+    for p in prompts:  
+        for r in responses:  
+            dataset.append([p, r ,TAG])
     split_idx = int(len(dataset)*split)
     random.shuffle(dataset)
     return dataset[:split_idx], dataset[split_idx:]

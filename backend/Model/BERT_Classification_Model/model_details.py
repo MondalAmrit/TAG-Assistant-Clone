@@ -71,11 +71,10 @@ class BERT(nn.Module):
         self.tok_embed = nn.Embedding(config.vocab_size, config.d_model)  # token embedding
         self.pos_embed = nn.Embedding(config.seq_len, config.d_model)  # position embedding
         self.blocks = nn.ModuleList([Block(config) for _ in range(config.num_layers)])
-        self.ln = LayerNorm(config.d_model,config.bias)
         self.seq_len, self.drop = config.seq_len, nn.Dropout(config.dropout)
     def forward(self, x, attn_mask = None):
         # x : (Batch_Size, Seq_len)    # targets : (Batch_Size, Seq_len)
-        B, S = x.shape
+        S = x.shape[-1]
         x = self.drop(self.tok_embed(x) + self.pos_embed(torch.arange(0, S, device = x.device)))
         for module in self.blocks:   x = module(x, attn_mask)
         return x
@@ -87,26 +86,25 @@ class BERTForClassification(nn.Module):
     def __init__(self, config):
         super().__init__()
         self.bert = BERT(config)
-        self.out_proj = nn.Linear( config.d_model * config.seq_len,config.num_classes,bias=True )
+        self.out_proj = nn.Linear( config.d_model,config.num_classes )
         self.seq_len = config.seq_len
         self.drop = nn.Dropout(config.dropout)
     def forward(self, x, attn_mask = None, tgt = None):
         if attn_mask == None:     attn_mask = (x == 0)
         bert_out = self.drop( self.bert(x,attn_mask) )
-        B,S,V = bert_out.shape
-        logits = self.out_proj( bert_out.view( B, V * S ) )
+        logits = self.out_proj( bert_out[:,0,:] )
         if tgt != None:
-            loss = F.cross_entropy( logits,tgt.long(),reduction='sum' )
+            loss = F.cross_entropy( logits,tgt.long() )
             return logits, loss
-        return logits
+        return F.softmax(logits, dim = -1)
     @property
     def device(self):     return next(self.parameters()).device
-    @torch.no_grad()
     def predict(self, x):
         global tokenizer
         x = tokenizer.encode(x)
         if len(x) < self.seq_len:
             x += [0]*max(0,self.seq_len-len(x))
         x = torch.tensor( x,dtype=torch.int,device = self.device )
-        out = self( x[-self.seq_len:].unsqueeze(0) ).argmax(-1)[0]
-        return out.item()
+        out = self( x[-self.seq_len:].unsqueeze(0) )
+        p = out.argmax(-1)[0]
+        return p.item(),out[0,p].item()

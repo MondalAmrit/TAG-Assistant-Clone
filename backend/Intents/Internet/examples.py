@@ -87,7 +87,7 @@ def synthetic_examples_dataset(split = 0.9):
                "Can you provide an image of a #tkn#", "I'm looking for pictures of #tkn#", "Image search: #tkn#", "Please show me photos of #tkn#", 
                "Find an image related to #tkn#", "search this image #tkn#", "Why don't you search for this image #tkn# on google?",
                "search this photo #tkn# on google", "search for image of #tkn# online", "images of ", "I need images for ", "related images for ",
-               "Give me the images of #tkn#", "get the image results for #tkn#"]
+               "Give me the images of #tkn#", "get the image results for #tkn#","#tkn# images"]
     tokens = ["cat", "sunset", "dogs", "tropical beach", "mountain landscape", "happy family", "famous landmarks", "beautiful flowers", "city skylines", "technology",
                   "human","rats","college","metro","flights","auto",'cab','car','comb','cost','country','currency','note','book']
     res = create_examples( queries,tokens,'Image Search',split=0.9 )
@@ -95,13 +95,14 @@ def synthetic_examples_dataset(split = 0.9):
     dataset[1].extend(res[1])
 
     # product
-    queries = ["Show me #tkn#","Show me the products related to "#tkn# , "Tell me about #tkn#", "Can you provide details #tkn#", "Give me information about #tkn#", "Provide information about #tkn#", "Give me details about #tkn#", "Show me available #tkn#",
+    queries = ["Show me #tkn#","Show me the products related to #tkn#" , "Tell me about #tkn#", "Can you provide details #tkn#", "Give me information about #tkn#", "Provide information about #tkn#", "Give me details about #tkn#", "Show me available #tkn#",
                     "What are the options for #tkn#", "I'm interested in #tkn#", "Please display #tkn#", "Could you show me #tkn#", "I'd like to see #tkn#", "I'm looking for details on #tkn#",
                     "Please provide info on #tkn#", "Can you show me #tkn#", "What's available for #tkn#", "Related products for #tkn#",
                     "Product options for #tkn#",'Amazon search for #tkn#', "search for the #tkn# online", "get me the #tkn# products",
-                    "Why don't you get me the product related to #tkn#", "Show me the prices for the #tkn#"]
+                    "Why don't you get me the product related to #tkn#", "Show me the prices for the #tkn#",
+                    "latest #tkn#","#tkn# new models","brand new #tkn#"]
 
-    tokens = ["latest smartphones on the market", "designer handbags", "laptops", "sports shoes", "kitchen appliances", "luxury watches", "home decor items",
+    tokens = ["smartphones on the market", "designer handbags", "laptops", "sports shoes", "kitchen appliances", "luxury watches", "home decor items",
                     "gaming consoles", "fitness trackers", "skincare products", "smart home devices", "office chairs", "travel accessories", "headphones",
                     "outdoor furniture", "camera equipment", "pet supplies", "books", "gourmet food items", "fashion accessories", "DIY tools", "art supplies",
                     "baby products", "musical instruments", "sporting goods", "car accessories", "gardening tools", "cooking utensils", "party supplies",
