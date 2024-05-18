@@ -111,4 +111,14 @@ def synthetic_examples_dataset(split = 0.9):
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
 
+    queries = ["#tkn# under #price#","Show me #tkn# in the range of #price#","#tkn# about the price of #price#"]
+    r = []
+    for q in queries:
+        for p in ["1000","100000","23000","549","999","23000","4320"]:
+            r.append(q.replace("#price#",p))
+    queries = r
+    tokens = ["mobiles","laptops","shoes","groceries","diamonds","electronics","gifts","notebooks","ipad","iphone"]
+    res = create_examples( queries,tokens,'Product Search',split=0.9 )
+    dataset[0].extend(res[0])
+    dataset[1].extend(res[1])
     return dataset[0], dataset[1]

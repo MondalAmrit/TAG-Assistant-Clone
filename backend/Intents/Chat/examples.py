@@ -212,4 +212,18 @@ def synthetic_examples_dataset(split = 0.9):
     res = create_examples(prompts,responses)
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
+
+
+    # Correlated data
+    # Like Sleep --> Normal sleep, System Sleep
+    prompts = [
+        "I am going to sleep now", "Good bye","I think I should go to sleep now",
+        "Can I go to sleep now?", "I am feeling sleepy",
+    ]
+    responses = [
+        "good night and take care :)"
+    ]
+    res = create_examples(prompts,responses)
+    dataset[0].extend(res[0])
+    dataset[1].extend(res[1])
     return dataset[0], dataset[1]

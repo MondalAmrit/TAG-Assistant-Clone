@@ -75,7 +75,7 @@ def generate_synthetic_data(split = 0.9):
                 "Why don't you make the brightness to ", "Increase the volume by ", "Decrease the volume by ",
                 "Increase the volume by ", "Decrease the volume by ","volume ","brightness ",
                 "make the screen dim to ","dim the screen by "]
-    slots = ['10','15','12','23','45','74','73','56','21']
+    slots = [str(i) for i in range(101)]
     suffixes = ['']
     res = combine_data(prefixes, slots, suffixes, 'Quantity', split)
     train_dataset.extend(res[0])
@@ -153,6 +153,14 @@ def generate_synthetic_data(split = 0.9):
                  'isarel','saudi arabia']
     suffixes = ['']
     res = combine_data(prefixes, slots, suffixes, 'Location', split)
+    train_dataset.extend(res[0])
+    test_dataset.extend(res[1])
+
+    # Cases where Slot Filling is not at all needed
+    prefixes = ['Why are you so shy?','I will go and get a coffee']
+    slots = ['']
+    suffixes = ['']
+    res = combine_data(prefixes, slots, suffixes, 'Query', split)
     train_dataset.extend(res[0])
     test_dataset.extend(res[1])
 

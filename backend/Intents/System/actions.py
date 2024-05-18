@@ -1,7 +1,9 @@
 from ctypes import cast, POINTER
 from comtypes import CLSCTX_ALL
+import comtypes
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 import screen_brightness_control, os, psutil
+
 
 # Volume Controls
 def setVolume(qty, inc = None):
@@ -10,22 +12,26 @@ def setVolume(qty, inc = None):
     # Mute volume --> 0%
     # Full sound --> 100%
     # None = get volume
-    device = AudioUtilities.GetSpeakers()
-    
+    comtypes.CoInitialize()
+    try:
+        device = AudioUtilities.GetSpeakers()
+    except Exception as e:
+        print('No Device is found')
+        print('Error: ',e)
+        return
     interface = device.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
     volume = cast(interface, POINTER(IAudioEndpointVolume))
-
     prevVol = volume.GetMasterVolumeLevelScalar()
     if not qty:
         print(f'Current Volume {prevVol*100:.0f}')
-        return
+        return f'{prevVol*100:.0f}'
     if inc:
         volume.SetMasterVolumeLevelScalar(max(0,min(1,(prevVol + qty)/100)), None)
     else:
         volume.SetMasterVolumeLevelScalar(max(0,min(1,qty/100)), None)
     currVol = volume.GetMasterVolumeLevelScalar()
     print(f'Increased Volume from {prevVol*100:.0f} to {currVol*100:.0f}')
-    return None
+    return f'{currVol*100:.0f}'
 
 # Brightness Controls
 def setBrightness(qty, inc = None):
@@ -33,14 +39,14 @@ def setBrightness(qty, inc = None):
     prevVal = screen_brightness_control.get_brightness()[0]
     if not qty:
         print(f'Current Brightness {prevVal}')
-        return
+        return prevVal
     if inc:
         screen_brightness_control.set_brightness(max(0,min(prevVal+qty,100)))
     else:
         screen_brightness_control.set_brightness(max(0,min(qty,100)))
     currVal = screen_brightness_control.get_brightness()[0]
     print(f'Changed brightness from {prevVal} to {currVal} ')
-    return None
+    return currVal
 
 # Shutdown
 def SystemDown(method):
@@ -73,7 +79,7 @@ def batteryStats(spec=None):
         print(f'{battery.secsleft} (in secs)')
     elif spec == 'charger':
         print(battery.power_plugged)
-    return None
+    return f'{battery.percent}% which can work till {battery.secsleft} secs. Charger status is {battery.power_plugged}'
 
 # Wifi Controls
 def toggleWifi(enable):
