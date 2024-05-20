@@ -34,8 +34,8 @@ Based on the user prompts the Ai will decide the response along with the protoco
   - In short, `Intent` contains the most relevent actions and examples at one place.
 
 # Current Problems
- - [ ] Why Models are having so poor performance ?
- - [ ] Slot Filling model implementation
+ - [x] Why Models are having so poor performance ?
+ - [x] Slot Filling model implementation
  - [ ] Dataset Quality
  - [ ] Poor Frontend
 
@@ -46,6 +46,9 @@ For Usage setup refer [here](docs/usage.md) <br />
 
 # How can I contribute?
 Read the [contriubtion guidelines](docs/contribution_guide.md)
+
+# How to create Intents/Datasets?
+Refer to [creating intents](docs/CreatingIntents.md)
 
 # Current Version Features
 - [x] Chat Interface

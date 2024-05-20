@@ -15,3 +15,7 @@ start "Frontend Server" cmd /k "cd frontend && npm run dev"
 echo Starting backend...
 rem Create backend server in another separate command prompt window
 start "Backend Server" cmd /k "cd backend && uvicorn main:app --reload"
+
+echo Opening website...
+rem Opens the frontend website url
+start http://localhost:5173/testing
