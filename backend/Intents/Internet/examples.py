@@ -1,31 +1,25 @@
 import csv, re, random
 # from protocol_activator import protocol_map_str
 
-IntentMap = {
-    "Information" : 1,
-    "Open Website" : 2,
-    "Image Search" : 3,
-    "Product Search" : 4,
-}
+IntentName = "Internet"
+ActionMap = ["Information","Open Website","Image Search","Product Search",]
 
-def get_dataset(split = 0.9, limit =  None):
+def generate_dataset(split = 0.9):
     """ Generates the dataset """
-    dataset = [[],[]]
     # Open dataset.csv and get it's contents (Not done yet)
     
     # Add Synthetic data generation
-    if not (limit and len(dataset) < limit):
-        res = synthetic_examples_dataset(split = split)
-        dataset[0].extend(res[0])
-        dataset[1].extend(res[1])
-    return dataset[0], dataset[1]
+    return synthetic_examples_dataset(split = split)
 
-def create_examples( queries,tokens,TAG, split = 0.9 ):
-    """ Creates dataset for the given actions based on queries and tokens """
+def create_examples( queries,SlotValues,TAG, split = 0.9 ):
+    """ Creates dataset for the given actions based on queries and Slot Values """
+    if TAG not in ActionMap:
+        print('This is not a valid TAG name')
+        return
     dataset = []
     for q in queries:
-        for t in tokens:
-            dataset.append([q.replace('#tkn#',t,1),TAG])
+        for sv in SlotValues:
+            dataset.append([q,f'{IntentName} {TAG}',sv])
     split_idx = int(len(dataset)*split)
     random.shuffle(dataset)
     return [dataset[:split_idx],dataset[split_idx:]]
@@ -34,18 +28,18 @@ def synthetic_examples_dataset(split = 0.9):
     """ Write down you synthetic examples here """
     dataset = [[],[]]
     # information
-    queries = ["Find information about #tkn#","Tell me about #tkn#","Provide details about #tkn#",
-                    "Explain the concept of #tkn#","What is the history of #tkn#","Provide information about #tkn#",
-                    "Could you enlighten me on #tkn#","I'm curious about #tkn#","Can you shed some light on #tkn#",
-                    "Give me insights into #tkn#","I'd like to explore #tkn#","Help me understand #tkn#",
-                    "I'm interested in learning about #tkn#","Share some knowledge about #tkn#","Can you delve into #tkn#",
-                    "Clarify the significance of #tkn#","I want to know more about #tkn#","Unravel the mysteries of #tkn#",
-                    "Educate me on #tkn#","Could you elucidate #tkn#","Brief me on #tkn#","Give me an overview of #tkn#",
-                    "I'm eager to discover #tkn#","Could you provide some background on #tkn#","Let's delve into the details of #tkn#",
-                    "Enlighten me about #tkn#","Elaborate on #tkn#",
-                "Internet Search for #tkn#", "Search online for #tkn#", "Search in chrome for #tkn#",
-                "Search on bing for #tkn#", "search on edge for #tkn#", "Why don't you search for #tkn# in the internet?",
-                "Why don't you search #tkn# in chrome", "#tkn# in internet"]
+    queries = ["Find information about {Query}","Tell me about {Query}","Provide details about {Query}",
+                    "Explain the concept of {Query}","What is the history of {Query}","Provide information about {Query}",
+                    "Could you enlighten me on {Query}","I'm curious about {Query}","Can you shed some light on {Query}",
+                    "Give me insights into {Query}","I'd like to explore {Query}","Help me understand {Query}",
+                    "I'm interested in learning about {Query}","Share some knowledge about {Query}","Can you delve into {Query}",
+                    "Clarify the significance of {Query}","I want to know more about {Query}","Unravel the mysteries of {Query}",
+                    "Educate me on {Query}","Could you elucidate {Query}","Brief me on {Query}","Give me an overview of {Query}",
+                    "I'm eager to discover {Query}","Could you provide some background on {Query}","Let's delve into the details of {Query}",
+                    "Enlighten me about {Query}","Elaborate on {Query}",
+                "Internet Search for {Query}", "Search online for {Query}", "Search in chrome for {Query}",
+                "Search on bing for {Query}", "search on edge for {Query}", "Why don't you search for {Query} in the internet?",
+                "Why don't you search {Query} in chrome", "{Query} in internet"]
     tokens = ["climate change", "artificial intelligence", "COVID-19?", "space exploration", "renewable energy", "ancient civilizations", "famous scientists", "global economic trends", "theory of relativity", "effects of deforestation",
                 "the mysteries of the deep sea", "how to open django website?", "how to host a python code?",
                 "how to get rid of the bugs?",
@@ -65,60 +59,65 @@ def synthetic_examples_dataset(split = 0.9):
                 "the cultural significance of traditional ceremonies", "the benefits of community gardening projects",
                 "the psychology of personality development","the impact of globalization on local economies", "the benefits of collaborative research initiatives",
                 "maths","physics","chemistry","sicence","computers","ecology","geography","data analytics","ai","llm","language models"]
-    res = create_examples( queries,tokens,'Information',split=0.9 )
+    r = [{"Query":i} for i in tokens]
+    res = create_examples( queries,r,'Information',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
     
     # open urls
-    queries = ['open #tkn#', 'can you please open #tkn#', 'I think its better to open #tkn#', "why don't you open #tkn#", 'please open #tkn#', 'Just open #tkn#',
-                'Navigate to #tkn#', 'Launch #tkn#', 'Go to #tkn#', 'Visit #tkn#', 'Access #tkn#', 'Take me to #tkn#', 
-                'Direct me to #tkn#', 'Load #tkn#', 'Explore #tkn#', 'Check out #tkn#', 'I want you to open #tkn#', "Why don't you open #tkn#?",
-                "show me the #tkn#", "I want you to open #tkn#", "Hey, Why don't you open #tkn# ?", "Just open the #tkn#",
-                "Open #tkn# in a browser", "Quickly open the #tkn#"]
+    queries = ['open {Query}', 'can you please open {Query}', 'I think its better to open {Query}', "why don't you open {Query}", 'please open {Query}', 'Just open {Query}',
+                'Navigate to {Query}', 'Launch {Query}', 'Go to {Query}', 'Visit {Query}', 'Access {Query}', 'Take me to {Query}', 
+                'Direct me to {Query}', 'Load {Query}', 'Explore {Query}', 'Check out {Query}', 'I want you to open {Query}', "Why don't you open {Query}?",
+                "show me the {Query}", "I want you to open {Query}", "Hey, Why don't you open {Query} ?", "Just open the {Query}",
+                "Open {Query} in a browser", "Quickly open the {Query}"]
     tokens = ['leetcode', 'linkedin', 'amazon', 'github', 'google', 'gmail', 'geeksforgeeks', 'stackoverflow', 'netflix', 'codechef',
                 'youtube', 'facebook', 'twitter', 'instagram', 'wikipedia', 'reddit', 'quora', 'ebay', 'microsoft', 'apple',
                 'spotify', 'bbc', 'cnn', 'nytimes', 'yahoo', 'bing', 'wordpress', 'pinterest', 'dropbox', 'twitch']
-    res = create_examples( queries,tokens,'Open Website',split=0.9 )
+    r = [{"Query":i} for i in tokens]
+    res = create_examples( queries,r,'Open Website',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
 
     # Image Search
-    queries = ["Give me an image of a #tkn#", "Image of a #tkn#", "Show me pictures of #tkn#", "Find me an image of a tropical #tkn#", "I need a picture of a mountain #tkn#", 
-               "Can you provide an image of a #tkn#", "I'm looking for pictures of #tkn#", "Image search: #tkn#", "Please show me photos of #tkn#", 
-               "Find an image related to #tkn#", "search this image #tkn#", "Why don't you search for this image #tkn# on google?",
-               "search this photo #tkn# on google", "search for image of #tkn# online", "images of ", "I need images for ", "related images for ",
-               "Give me the images of #tkn#", "get the image results for #tkn#","#tkn# images"]
+    queries = ["Give me an image of a {Query}", "Image of a {Query}", "Show me pictures of {Query}", "Find me an image of a tropical {Query}", "I need a picture of a mountain {Query}", 
+               "Can you provide an image of a {Query}", "I'm looking for pictures of {Query}", "Image search: {Query}", "Please show me photos of {Query}", 
+               "Find an image related to {Query}", "search this image {Query}", "Why don't you search for this image {Query} on google?",
+               "search this photo {Query} on google", "search for image of {Query} online", "images of ", "I need images for ", "related images for ",
+               "Give me the images of {Query}", "get the image results for {Query}","{Query} images"]
     tokens = ["cat", "sunset", "dogs", "tropical beach", "mountain landscape", "happy family", "famous landmarks", "beautiful flowers", "city skylines", "technology",
                   "human","rats","college","metro","flights","auto",'cab','car','comb','cost','country','currency','note','book']
-    res = create_examples( queries,tokens,'Image Search',split=0.9 )
+    r = [{"Query":i} for i in tokens]
+    res = create_examples( queries,r,'Image Search',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
 
     # product
-    queries = ["Show me #tkn#","Show me the products related to #tkn#" , "Tell me about #tkn#", "Can you provide details #tkn#", "Give me information about #tkn#", "Provide information about #tkn#", "Give me details about #tkn#", "Show me available #tkn#",
-                    "What are the options for #tkn#", "I'm interested in #tkn#", "Please display #tkn#", "Could you show me #tkn#", "I'd like to see #tkn#", "I'm looking for details on #tkn#",
-                    "Please provide info on #tkn#", "Can you show me #tkn#", "What's available for #tkn#", "Related products for #tkn#",
-                    "Product options for #tkn#",'Amazon search for #tkn#', "search for the #tkn# online", "get me the #tkn# products",
-                    "Why don't you get me the product related to #tkn#", "Show me the prices for the #tkn#",
-                    "latest #tkn#","#tkn# new models","brand new #tkn#"]
+    queries = ["Show me {Query}","Show me the products related to {Query}" , "Tell me about {Query}", "Can you provide details {Query}", "Give me information about {Query}", "Provide information about {Query}", "Give me details about {Query}", "Show me available {Query}",
+                    "What are the options for {Query}", "I'm interested in {Query}", "Please display {Query}", "Could you show me {Query}", "I'd like to see {Query}", "I'm looking for details on {Query}",
+                    "Please provide info on {Query}", "Can you show me {Query}", "What's available for {Query}", "Related products for {Query}",
+                    "Product options for {Query}",'Amazon search for {Query}', "search for the {Query} online", "get me the {Query} products",
+                    "Why don't you get me the product related to {Query}", "Show me the prices for the {Query}",
+                    "latest {Query}","{Query} new models","brand new {Query}"]
 
     tokens = ["smartphones on the market", "designer handbags", "laptops", "sports shoes", "kitchen appliances", "luxury watches", "home decor items",
                     "gaming consoles", "fitness trackers", "skincare products", "smart home devices", "office chairs", "travel accessories", "headphones",
                     "outdoor furniture", "camera equipment", "pet supplies", "books", "gourmet food items", "fashion accessories", "DIY tools", "art supplies",
                     "baby products", "musical instruments", "sporting goods", "car accessories", "gardening tools", "cooking utensils", "party supplies",
                     "samsung s20 ultra", 'IQOO Z6 lite','realme 9','realme 8i','xiaomi','redmi','poco','pocox2','Noise fit']
-    res = create_examples( queries,tokens,'Product Search',split=0.9 )
+    r = [{"Query":i} for i in tokens]
+    res = create_examples( queries,r,'Product Search',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
 
-    queries = ["#tkn# under #price#","Show me #tkn# in the range of #price#","#tkn# about the price of #price#"]
-    r = []
-    for q in queries:
-        for p in ["1000","100000","23000","549","999","23000","4320"]:
-            r.append(q.replace("#price#",p))
-    queries = r
+    queries = ["{Query} under {Quantity}","Show me {Query} in the range of {Quantity}","{Query} about the price of {Quantity}"]
     tokens = ["mobiles","laptops","shoes","groceries","diamonds","electronics","gifts","notebooks","ipad","iphone"]
-    res = create_examples( queries,tokens,'Product Search',split=0.9 )
+    r = []
+    for t in tokens:
+        for p in ["1000","100000","23000","549","999","23000","4320"]:
+            r.append({"Query":t,"Price":p})
+    res = create_examples( queries,r,'Product Search',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
     return dataset[0], dataset[1]
+
+print(generate_dataset()[0][-10:])

@@ -1,41 +1,46 @@
-import csv, random
+import random
 # from protocol_activator import protocol_map_str
+# from .actions import ActionMap
+ActionMap = {'PlayMusic':'none'}
 
-def get_dataset(split = 0.9, limit =  None):
+IntentName = "Music"
+
+def generate_dataset(split = 0.9):
     """ Generates the dataset """
-    dataset = [[],[]]
+    #####################################
+    # Actually this is not a correct method coz .csv is not considered.
+    # But we can ignore it for now.
     # Open dataset.csv and get it's contents (Not done yet)
     
     # Add Synthetic data generation
-    if not (limit and len(dataset) < limit):
-        res = synthetic_examples_dataset(split = split)
-        dataset[0].extend(res[0])
-        dataset[1].extend(res[1])
-    return dataset[0], dataset[1]
+    return generate_synthetic_dataset(split = split)
 
 def create_examples( queries,tokens,TAG, split = 0.9 ):
     """ Creates dataset for the given actions based on queries and tokens """
+    if TAG not in ActionMap.keys():
+        print('The TAG name is not present')
+        return
     dataset = []
     for q in queries:
         for t in tokens:
-            dataset.append([q.replace('#tkn#',t,1),TAG])
+            dataset.append([q,f'{IntentName} {TAG}',{"Query":t}])
     split_idx = int(len(dataset)*split)
     random.shuffle(dataset)
     return [dataset[:split_idx],dataset[split_idx:]]
 
-def synthetic_examples_dataset(split = 0.9):
+def generate_synthetic_dataset(split = 0.9):
     """ Write down you synthetic examples here """
     dataset = [[],[]]
     # Songs by Artists
-    queries = ["Can you play a song of #tkn#", "Why don't you play songs of #tkn#", "I'd like to listen to a song by #tkn#",
-        "Could you please play something from #tkn#", "How about playing a track from #tkn#", "I'm in the mood for some music by #tkn#",
-        "Play a song by #tkn#", "Let's listen to something by #tkn#", "Can you put on a song from #tkn#", "I want to hear a track by #tkn#",
-        "Play some tunes from #tkn#", "Could you play something by #tkn#", "I'm craving some music from #tkn#", "Why not play songs from #tkn#",
-        "I'm feeling like listening to #tkn#", "How about a song from #tkn#", "Please play a track by #tkn#", "Put on a song by #tkn#",
-        "Let's hear something from #tkn#", "Can you play a tune from #tkn#", "I'd love to hear a song by #tkn#", "Why don't we listen to #tkn#",
-        "Play a track from #tkn#", "Let's enjoy some music by #tkn#", "How about some tunes from #tkn#", "Can you play something by #tkn#",
-        "I'm in the mood for a song by #tkn#", "Play a track by #tkn#", "Could you put on some music by #tkn#", "I'd like to hear something from #tkn#",
-        "I think it's better to play #tkn#'s songs", "I want you to play #tkn# songs"]
+    queries = ["Can you play a song of {Query}", "Why don't you play songs of {Query}", "I'd like to listen to a song by {Query}",
+        "Could you please play something from {Query}", "How about playing a track from {Query}", "I'm in the mood for some music by {Query}",
+        "Play a song by {Query}", "Let's listen to something by {Query}", "Can you put on a song from {Query}", "I want to hear a track by {Query}",
+        "Play some tunes from {Query}", "Could you play something by {Query}", "I'm craving some music from {Query}", "Why not play songs from {Query}",
+        "I'm feeling like listening to {Query}", "How about a song from {Query}", "Please play a track by {Query}", "Put on a song by {Query}",
+        "Let's hear something from {Query}", "Can you play a tune from {Query}", "I'd love to hear a song by {Query}", "Why don't we listen to {Query}",
+        "Play a track from {Query}", "Let's enjoy some music by {Query}", "How about some tunes from {Query}", "Can you play something by {Query}",
+        "I'm in the mood for a song by {Query}", "Play a track by {Query}", "Could you put on some music by {Query}", "I'd like to hear something from {Query}",
+        "I think it's better to play {Query}'s songs", "I want you to play {Query} songs"]
     tokens = ["Arijit Singh", "Taylor Swift", "Ed Sheeran", "Lata Mangeshkar", "Rihanna", "Beyoncé", "Ariana Grande", "Kishore Kumar", 
                  "Justin Bieber", "Neha Kakkar", "Bruno Mars", "Adele", "Sonu Nigam", "Billie Eilish", "Atif Aslam", "Lady Gaga", 
                  "Selena Gomez", "Shreya Ghoshal", "Coldplay", "Katy Perry", "Mohd. Rafi", "Eminem", "BTS", "Drake", "Yo Yo Honey Singh", 
@@ -44,7 +49,7 @@ def synthetic_examples_dataset(split = 0.9):
                  "Alisha Chinai", "The Weeknd", "Jagjit Singh", "Sia", "Mika Singh", "Charlie Puth", "Diljit Dosanjh", "Sam Smith", 
                  "Vishal Dadlani", "Marshmello", "Ankit Tiwari", "Queen", "Lucky Ali", "Halsey", "Hardy Sandhu", "John Legend", 
                  "Kailash Kher", "Demi Lovato", "Raftaar", "Twenty One Pilots"]
-    res = create_examples( queries,tokens,'Music',split=0.9 )
+    res = create_examples( queries,tokens,'PlayMusic',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
 
@@ -65,24 +70,24 @@ def synthetic_examples_dataset(split = 0.9):
         "The Fame by Lady Gaga", "Fearless by Taylor Swift"
     ]
     queries = [
-        "Can you play songs from #tkn#",
-        "I'm craving some songs from #tkn#", "How about playing some tunes from #tkn#", "Let's listen to some songs from #tkn#",
-        "Play some tracks from #tkn#", "Can we hear some music from #tkn#", "I'd love to listen to some tracks from #tkn#",
-        "How about some tunes from #tkn#", "I'm in the mood for some songs from #tkn#", "Play some songs from #tkn#",
-        "Can you put on some tunes from #tkn#", "Let's hear some music from #tkn#", "How about some songs from #tkn#",
-        "I'm feeling like listening to some tracks from #tkn#", "Play some tracks from #tkn#", "Could you play some songs from #tkn#",
-        "Let's put on some music from #tkn#", "How about playing some songs from #tkn#", "Can you play some tracks from #tkn#",
-        "I'd like to hear some songs from #tkn#", "Let's play some music from #tkn#", "How about listening to some songs from #tkn#",
-        "I'm in the mood for some tunes from #tkn#", "Could you put on some tracks from #tkn#", "Let's enjoy some songs from #tkn#",
-        "Play some tunes from #tkn#", "Can you play some music from #tkn#", "Let's listen to some tunes from #tkn#",
-        "I'd love to hear some music from #tkn#", "How about some music from #tkn#", "I'm in the mood for some albums from #tkn#",
-        "Play some albums from #tkn#", "Can you put on some albums from #tkn#", "Let's hear some albums from #tkn#",
-        "How about playing some albums from #tkn#", "I'd like to hear some albums from #tkn#", "Play some tracks from #tkn#",
-        "Can you play some albums from #tkn#", "Let's enjoy some albums from #tkn#", "How about some albums from #tkn#",
-        "I'm feeling like listening to some albums from #tkn#", "Play some albums from #tkn#", "Could you play some albums from #tkn#",
-        "Let's put on some albums from #tkn#", "Play #tkn# songs", "I want you to play the ablum #tkn# songs"
+        "Can you play songs from {Query}",
+        "I'm craving some songs from {Query}", "How about playing some tunes from {Query}", "Let's listen to some songs from {Query}",
+        "Play some tracks from {Query}", "Can we hear some music from {Query}", "I'd love to listen to some tracks from {Query}",
+        "How about some tunes from {Query}", "I'm in the mood for some songs from {Query}", "Play some songs from {Query}",
+        "Can you put on some tunes from {Query}", "Let's hear some music from {Query}", "How about some songs from {Query}",
+        "I'm feeling like listening to some tracks from {Query}", "Play some tracks from {Query}", "Could you play some songs from {Query}",
+        "Let's put on some music from {Query}", "How about playing some songs from {Query}", "Can you play some tracks from {Query}",
+        "I'd like to hear some songs from {Query}", "Let's play some music from {Query}", "How about listening to some songs from {Query}",
+        "I'm in the mood for some tunes from {Query}", "Could you put on some tracks from {Query}", "Let's enjoy some songs from {Query}",
+        "Play some tunes from {Query}", "Can you play some music from {Query}", "Let's listen to some tunes from {Query}",
+        "I'd love to hear some music from {Query}", "How about some music from {Query}", "I'm in the mood for some albums from {Query}",
+        "Play some albums from {Query}", "Can you put on some albums from {Query}", "Let's hear some albums from {Query}",
+        "How about playing some albums from {Query}", "I'd like to hear some albums from {Query}", "Play some tracks from {Query}",
+        "Can you play some albums from {Query}", "Let's enjoy some albums from {Query}", "How about some albums from {Query}",
+        "I'm feeling like listening to some albums from {Query}", "Play some albums from {Query}", "Could you play some albums from {Query}",
+        "Let's put on some albums from {Query}", "Play {Query} songs", "I want you to play the ablum {Query} songs"
     ]
-    res = create_examples( queries,tokens,'Music',split=0.9 )
+    res = create_examples( queries,tokens,'PlayMusic',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
 
@@ -98,14 +103,16 @@ def synthetic_examples_dataset(split = 0.9):
         "Alone pt II", "Faded", 
     ]
     queries = [
-        "How about playing #tkn#", "Can you play #tkn#", "Let's listen to #tkn#", "I'd like to hear #tkn#",
-        "Play #tkn#", "Put on #tkn#", "Could you play #tkn#", "Why not try #tkn#", "I'm in the mood for #tkn#",
-        "How about some #tkn#", "Play some #tkn#", "Let's enjoy #tkn#", "I'm craving #tkn#", "Can we hear #tkn#",
-        "I'd love to listen to #tkn#", "Why not play #tkn#", "How about listening to #tkn#", "Play some tunes from #tkn#",
-        "Let's hear #tkn#", "I'm feeling like listening to #tkn#", "play #tkn# song", "start music with #tkn# song",
+        "How about playing {Query}", "Can you play {Query}", "Let's listen to {Query}", "I'd like to hear {Query}",
+        "Play {Query}", "Put on {Query}", "Could you play {Query}", "Why not try {Query}", "I'm in the mood for {Query}",
+        "How about some {Query}", "Play some {Query}", "Let's enjoy {Query}", "I'm craving {Query}", "Can we hear {Query}",
+        "I'd love to listen to {Query}", "Why not play {Query}", "How about listening to {Query}", "Play some tunes from {Query}",
+        "Let's hear {Query}", "I'm feeling like listening to {Query}", "play {Query} song", "start music with {Query} song",
     ]
-    res = create_examples( queries,tokens,'Music',split=0.9 )
+    res = create_examples( queries,tokens,'PlayMusic',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
 
     return dataset[0], dataset[1]
+
+print(generate_dataset()[0][:10])
