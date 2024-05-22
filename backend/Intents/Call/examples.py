@@ -1,54 +1,56 @@
 import csv, random
 
-IntentMap = {
-    "Call": 1,
-    "PickCall": 2,
-    "CutCall": 3,
-}
+ActionMap = ['MakeCall','PickCall','CutCall']
+IntentName = "Call"
 
-
-def get_dataset(split=0.9, limit=None):
-    """Generates the dataset"""
-    dataset = [[], []]
+def generate_dataset(split = 0.9):
+    """ Generates the dataset """
+    #####################################
+    # Actually this is not a correct method coz .csv is not considered.
+    # But we can ignore it for now.
     # Open dataset.csv and get it's contents (Not done yet)
-
+    
     # Add Synthetic data generation
-    if not (limit and len(dataset) < limit):
-        res = synthetic_examples_dataset(split=split)
-        dataset[0].extend(res[0])
-        dataset[1].extend(res[1])
-    return dataset[0], dataset[1]
+    return generate_synthetic_dataset(split = split)
 
-
-def create_examples(queries, tokens, TAG, split=0.9):
-    """Creates dataset for the given actions based on queries and tokens"""
+def create_examples( queries,SlotValues,TAG, split = 0.9 ):
+    """ Creates dataset for the given actions based on queries and Slot Values """
+    if TAG not in ActionMap:
+        print('This is not a valid TAG name: ', TAG)
+        return
     dataset = []
     for q in queries:
-        for t in tokens:
-            dataset.append([q.replace("#tkn#", t, 1), TAG])
-    split_idx = int(len(dataset) * split)
+        for sv in SlotValues:
+            dataset.append([q,f'{IntentName} {TAG}',sv])
+    split_idx = int(len(dataset)*split)
     random.shuffle(dataset)
-    return [dataset[:split_idx], dataset[split_idx:]]
+    return [dataset[:split_idx],dataset[split_idx:]]
 
-
-def synthetic_examples_dataset(split=0.9):
-    """Write down you synthetic examples here"""
-    dataset = [[], []]
+def generate_synthetic_dataset(split = 0.9):
+    """ Write down you synthetic examples here """
+    dataset = [[],[]]
 
     # Call
     queries = [
-        "Call #tkn#", "Please call #tkn#", "Can you call #tkn#", "Dial the number of #tkn#", "Dial #tkn#",
-        "Call the number of #tkn#", "Can you call the number of #tkn#", "Call the number #tkn#",
-        "Can you call the number #tkn#", "I want you to call #tkn#", "I want you to call the number of #tkn#",
-        "I want you to dial the number of #tkn#", "I want you to dial #tkn#", "Hit #tkn# up",
-        "Hit the number of #tkn#", "Ring up #tkn#", "Ring up the number of #tkn#", "Can you ring #tkn#",
-        "Can you ring up #tkn#", "Call #tkn# now", "Please give #tkn# a call", "Can you give #tkn# a ring?",
-        "Dial up #tkn#", "Dial #tkn#'s number", "Call up the number of #tkn#",
-        "Can you give a call to the number of #tkn#?", "Call this number: #tkn#", "Can you call this person: #tkn#?",
-        "I need you to call #tkn#", "I want you to call #tkn#'s number", "I need you to dial #tkn#'s number",
-        "I want you to dial this person: #tkn#", "Hit up #tkn#", "Hit the number of #tkn#", "Ring #tkn# up",
-        "Ring up #tkn#'s number", "Can you ring up #tkn#?", "Can you ring up this person: #tkn#?",
+        "Call {Query}", "Please call {Query}", "Can you call {Query}", "Dial the number of {Query}", "Dial {Query}",
+        "Call the number of {Query}", "Can you call the number of {Query}", "Call the number {Query}",
+        "Can you call the number {Query}", "I want you to call {Query}", "I want you to call the number of {Query}",
+        "I want you to dial the number of {Query}", "I want you to dial {Query}", "Hit {Query} up",
+        "Hit the number of {Query}", "Ring up {Query}", "Ring up the number of {Query}", "Can you ring {Query}",
+        "Can you ring up {Query}", "Call {Query} now", "Please give {Query} a call", "Can you give {Query} a ring?",
+        "Dial up {Query}", "Dial {Query}'s number", "Call up the number of {Query}",
+        "Can you give a call to the number of {Query}?", "Call this number: {Query}", "Can you call this person: {Query}?",
+        "I need you to call {Query}", "I want you to call {Query}'s number", "I need you to dial {Query}'s number",
+        "I want you to dial this person: {Query}", "Hit up {Query}", "Hit the number of {Query}", "Ring {Query} up",
+        "Ring up {Query}'s number", "Can you ring up {Query}?", "Can you ring up this person: {Query}?",
     ]
+    names = ["Anirudh Mukkamala","Rishav Raj","Amritapa Mondal","Vikram Singh Chauhan","Vaibhav Garg",
+             "Ansh Gupta","Ansh Goyal","Rishabh Chaudhary","Shubham Kumar Singh","Hardik Gupta","Jane Foster",
+             "Tony Stark","Donald Trump","Barak Obama","Narendra Modi","Mukesh Ambani"]
+    r = [{"Query":i} for i in names]
+    res = create_examples( queries,r,'MakeCall',split=0.9 )
+    dataset[0].extend(res[0])
+    dataset[1].extend(res[1])
 
     # PickCall
     queries = [
@@ -57,7 +59,12 @@ def synthetic_examples_dataset(split=0.9):
         "Answer the call right now", "Please answer the call", "Take the call", "Can you take the call?",
         "Take the call now", "Take the call right now", "Please take the call", "Grab the call",
         "Can you grab the call?", "Grab the call now", "Grab the call right now", "Please grab the call",
+        "Answer the call"
     ]
+    r = [{}]
+    res = create_examples( queries,r,'PickCall',split=0.9 )
+    dataset[0].extend(res[0])
+    dataset[1].extend(res[1])
 
     # CutCall
     queries = [
@@ -70,3 +77,8 @@ def synthetic_examples_dataset(split=0.9):
         "Please disconnect the call", "Terminate the call", "Can you terminate the call?", "Terminate the call now",
         "Terminate the call right now", "Please terminate the call",
     ]
+    res = create_examples( queries,r,'CutCall',split=0.9 )
+    dataset[0].extend(res[0])
+    dataset[1].extend(res[1])
+
+    return dataset[0], dataset[1]

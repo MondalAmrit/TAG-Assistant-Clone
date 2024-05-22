@@ -17,7 +17,7 @@ def create_examples(prompts, responses, TAG = 'BasicChat', split= 0.9 ):
     dataset = []
     for p in prompts:  
         for r in responses:  
-            dataset.append([p, r ,TAG])
+            dataset.append([p ,TAG, r])  # Just to fit with the convention of Slot Filling datasets
     split_idx = int(len(dataset)*split)
     random.shuffle(dataset)
     return dataset[:split_idx], dataset[split_idx:]
