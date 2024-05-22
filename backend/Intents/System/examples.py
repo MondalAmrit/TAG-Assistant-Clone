@@ -7,50 +7,57 @@ intentMap = {
     'Battery': 4,
     'Datetime':5,
 }
+ActionMap = ['Volume','Brightness','Shutdown','Sleep','Restart','Logout','Battery','Datetime']
+IntentName = "System"
 
-def get_dataset(split = 0.9, limit =  None):
+def generate_dataset(split = 0.9):
     """ Generates the dataset """
-    dataset = [[],[]]
+    #####################################
+    # Actually this is not a correct method coz .csv is not considered.
+    # But we can ignore it for now.
     # Open dataset.csv and get it's contents (Not done yet)
     
     # Add Synthetic data generation
-    return synthetic_examples_dataset(split = split)
+    return generate_synthetic_dataset(split = split)
 
-def create_examples( queries,tokens,TAG, split = 0.9 ):
-    """ Creates dataset for the given actions based on queries and tokens """
+def create_examples( queries,SlotValues,TAG, split = 0.9 ):
+    """ Creates dataset for the given actions based on queries and Slot Values """
+    if TAG not in ActionMap:
+        print('This is not a valid TAG name: ',TAG)
+        raise 'Invalid TAG Name'
     dataset = []
     for q in queries:
-        for t in tokens:
-            dataset.append([q.replace('#tkn#',t,1),TAG])
+        for sv in SlotValues:
+            dataset.append([q,f'{IntentName} {TAG}',sv])
     split_idx = int(len(dataset)*split)
     random.shuffle(dataset)
     return [dataset[:split_idx],dataset[split_idx:]]
 
-def synthetic_examples_dataset(split = 0.9):
+def generate_synthetic_dataset(split = 0.9):
     """ Write down you synthetic examples here """
     dataset = [[],[]]
     # Volume
-    queries = ['can you set the volume to #tkn#', 'make the volume to #tkn#', 'put the volume at #tkn#',
-               'set the volume to #tkn#','increase the volume by #tkn#','change the volume by #tkn#', 
-            'up the volume by #tkn#', 'decrease the volume by #tkn#','change the volume by #tkn#', 
-            'drop the volume by #tkn#','I think it is better to set the volume at #tkn#',
-            "why don't you leave the volume at #tkn#","volume #tkn#",
-            "I want you to make the volume as #tkn#", "I think its better to set the volume to #tkn#",
-            "I need the volume to stay at #tkn#", "Why don't you set the volume to #tkn#?",
-            "Vol to #tkn#", "#tkn# volume.","I need volume to be #tkn#"]
-    tokens = [str(i) for i in range(101)]
+    queries = ['can you set the volume to {Quantity}', 'make the volume to {Quantity}', 'put the volume at {Quantity}',
+               'set the volume to {Quantity}','increase the volume by {Quantity}','change the volume by {Quantity}', 
+            'up the volume by {Quantity}', 'decrease the volume by {Quantity}','change the volume by {Quantity}', 
+            'drop the volume by {Quantity}','I think it is better to set the volume at {Quantity}',
+            "why don't you leave the volume at {Quantity}","volume {Quantity}",
+            "I want you to make the volume as {Quantity}", "I think its better to set the volume to {Quantity}",
+            "I need the volume to stay at {Quantity}", "Why don't you set the volume to {Quantity}?",
+            "Vol to {Quantity}", "{Quantity} volume.","I need volume to be {Quantity}"]
+    tokens = [{"Quantity":str(i)} for i in range(101)]
     res = create_examples( queries,tokens,'Volume',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
 
     # Brightness
-    queries = ['can you set the brightness to #tkn#', 'make the brightness to #tkn#', 'put the brightness at #tkn#',
-               'set the brightness to #tkn#',
-               'increase the brightness by #tkn#','change the brightness by #tkn#', 'up the brightness by #tkn#',
-               'decrease the brightness by #tkn#','change the brightness by #tkn#', 'drop the brightness by #tkn#',
-               'I think it is better to set the brightness at #tkn#', "Why don't you set the brightness at #tkn#?", "brightness #tkn#",
-               "I want you to make the brightness as #tkn#", "make the brightness bar to #tkn#",
-               "brightness to #tkn#", "#tkn# brightness.","I need brightness to be #tkn#"]
+    queries = ['can you set the brightness to {Quantity}', 'make the brightness to {Quantity}', 'put the brightness at {Quantity}',
+               'set the brightness to {Quantity}',
+               'increase the brightness by {Quantity}','change the brightness by {Quantity}', 'up the brightness by {Quantity}',
+               'decrease the brightness by {Quantity}','change the brightness by {Quantity}', 'drop the brightness by {Quantity}',
+               'I think it is better to set the brightness at {Quantity}', "Why don't you set the brightness at {Quantity}?", "brightness {Quantity}",
+               "I want you to make the brightness as {Quantity}", "make the brightness bar to {Quantity}",
+               "brightness to {Quantity}", "{Quantity} brightness.","I need brightness to be {Quantity}"]
     res = create_examples( queries,tokens,'Brightness',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
@@ -63,7 +70,7 @@ def synthetic_examples_dataset(split = 0.9):
         "I said Shut down the system", "Simply Shutdown", "shutdown","shut down",
         "Just shut down", "Just shutdown", "I want you to shutdown", "Why don't you shutdown?",
         "Stay off forever", "I need you to be offline forever"]
-    tokens = ['']
+    tokens = [{}]
     res = create_examples( queries,tokens,'Shutdown',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
@@ -142,7 +149,7 @@ def synthetic_examples_dataset(split = 0.9):
         "Show today's date", "Get the date now", "Today's day", "Current day",
         "What date is it today?", "Date today", "Tell me today's date",
         "Now's date"]    
-    res = create_examples( queries,tokens,'Current Date',split=0.9 )
+    res = create_examples( queries,tokens,'Datetime',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
     # Date time (current time)
@@ -153,7 +160,7 @@ def synthetic_examples_dataset(split = 0.9):
         "What's the time right now?", "Current system time", "Time right now",
         "Show system time", "System time now", "Time of the day",
         "Check the current time", "What time is it?"]    
-    res = create_examples( queries,tokens,'Current Time',split=0.9 )
+    res = create_examples( queries,tokens,'Datetime',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
     # Date time (timezone)
@@ -164,7 +171,7 @@ def synthetic_examples_dataset(split = 0.9):
         "What's the timezone?", "System timezone", "Get the timezone now",
         "Show the system timezone", "Check system timezone", "Timezone information",
         "Current timezone", "Check current time zone"]    
-    res = create_examples( queries,tokens,'Time Zone',split=0.9 )
+    res = create_examples( queries,tokens,'Datetime',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
     # Date time (timestamp)
@@ -175,7 +182,7 @@ def synthetic_examples_dataset(split = 0.9):
         "What's the timestamp?", "System timestamp", "Get the timestamp now",
         "Show the system timestamp", "Check system timestamp", "Timestamp information",
         "Current system timestamp", "Check current timestamp"]    
-    res = create_examples( queries,tokens,'TimeStamp',split=0.9 )
+    res = create_examples( queries,tokens,'Datetime',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
     # Date time (week day)
@@ -187,7 +194,7 @@ def synthetic_examples_dataset(split = 0.9):
         "Now's day of the week", "What's the day today?", "System day of the week",
         "Check current day of the week", "Today's day", "Check today's day of the week",
         "What's today?"]    
-    res = create_examples( queries,tokens,'Week Day',split=0.9 )
+    res = create_examples( queries,tokens,'Datetime',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
     # Date time (Year)
@@ -198,7 +205,7 @@ def synthetic_examples_dataset(split = 0.9):
         "What's the year?", "System year", "Get the year now",
         "Show the system year", "Check system year", "Year information",
         "Current system year", "Check current year", "Is this year 2024?"]    
-    res = create_examples( queries,tokens,'Year',split=0.9 )
+    res = create_examples( queries,tokens,'Datetime',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
 

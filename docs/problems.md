@@ -1,0 +1,3 @@
+# Weather Dataset Problem
+Weather Forecast must be time calculated (not predefined like Future,Past,...).
+It should be calculated as if (Date.now() < prompt_time) then past...

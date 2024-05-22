@@ -1,3 +1,7 @@
+#######################################
+# Problem in Weather data
+# It would be better if the weather actions will be based on the date rather than previous , current like things
+
 import csv, re, random
 # from protocol_activator import protocol_map_str
 
@@ -8,81 +12,90 @@ IntentMap = {
     "Future Weather Forecast" : 4,
     "astronomy" : 5,
 }
+ActionMap = ['Current','Past','Future','GeoLocation','Astronomy']
+IntentName = "Weather"
 
-def get_dataset(split = 0.9, limit =  None):
+def generate_dataset(split = 0.9):
     """ Generates the dataset """
-    dataset = [[],[]]
+    #####################################
+    # Actually this is not a correct method coz .csv is not considered.
+    # But we can ignore it for now.
     # Open dataset.csv and get it's contents (Not done yet)
     
     # Add Synthetic data generation
-    if not (limit and len(dataset) < limit):
-        res = synthetic_examples_dataset(split = split)
-        dataset[0].extend(res[0])
-        dataset[1].extend(res[1])
-        
-    return dataset[0], dataset[1]
+    return generate_synthetic_dataset(split = split)
 
-def create_examples( queries,tokens,TAG, split = 0.9 ):
-    """ Creates dataset for the given actions based on queries and tokens """
+def create_examples( queries,SlotValues,TAG, split = 0.9 ):
+    """ Creates dataset for the given actions based on queries and Slot Values """
+    if TAG not in ActionMap:
+        print('This is not a valid TAG name')
+        return
     dataset = []
     for q in queries:
-        for t in tokens:
-            dataset.append([q.replace('#tkn#',t,1),TAG])
+        for sv in SlotValues:
+            dataset.append([q,f'{IntentName} {TAG}',sv])
     split_idx = int(len(dataset)*split)
     random.shuffle(dataset)
     return [dataset[:split_idx],dataset[split_idx:]]
 
-def synthetic_examples_dataset(split = 0.9):
+def generate_synthetic_dataset(split = 0.9):
     """ Write down you synthetic examples here """
     dataset = [[],[]]
     # Current Weather Forecast
-    queries = ['What is the current weather at #tkn#', 'current weather status at #tkn#', 'present weather condition in #tkn#',
-               'weather at #tkn#','weather situation at #tkn#','temperature at #tkn#','heat at #tkn#',
-               'temperature in celsius at #tkn#','temperature in fahrenheit at #tkn#',
-               'temperature in #tkn#','humidity at #tkn#','humidity in #tkn#','moisture at #tkn#',
-               'wind speed at #tkn#', 'Air Quality at #tkn#', "today's weather at #tkn# ?",
-               'weather of #tkn#', "#tkn#'s weather", "weather of #tkn# today", "#tkn#'s weather report",
-               "fetch me the weather report of #tkn#", "give me the weather report of #tkn#", 
-               "why is it so hot in #tkn#?", "why the weather changed suddenly at #tkn#",
-               "What's the current weather?", "Why don't you get the current wather of #tkn#?",
-               "current weather forecase of #tkn#"]
+    queries = ['What is the current weather at {Location}', 'current weather status at {Location}', 'present weather condition in {Location}',
+               'weather at {Location}','weather situation at {Location}','temperature at {Location}','heat at {Location}',
+               'temperature in celsius at {Location}','temperature in fahrenheit at {Location}',
+               'temperature in {Location}','humidity at {Location}','humidity in {Location}','moisture at {Location}',
+               'wind speed at {Location}', 'Air Quality at {Location}', "today's weather at {Location} ?",
+               'weather of {Location}', "{Location}'s weather", "weather of {Location} today", "{Location}'s weather report",
+               "fetch me the weather report of {Location}", "give me the weather report of {Location}", 
+               "why is it so hot in {Location}?", "why the weather changed suddenly at {Location}",
+               "What's the current weather?", "Why don't you get the current wather of {Location}?",
+               'Weather of {Location} on Friday', 'Weather of {Location} on Tuesday',
+               "current weather forecase of {Location}"]
     tokens = ['New Delhi','delhi','Mumbai','Kolkata','Chennai','Bangloore','Moscow','New York','Shanghai','Tokyo',
                  'Pune','Hyderabad','Islamabad','Dhaka','columbo','Australia','India','Spain','Morocco',
                  'Paris','England','oslo','toronto','Agra','Lucknow','Muzafar nagar','vijayawada','Guntur',
                  'Vishakapatnam','Vellore','tirupati','jammu','kashmir','china','pakistan','egypt',
                  'isarel','saudi arabia']
-    
-    res = create_examples( queries,tokens,'Current Weather Forecast',split=0.9 )
+    r = [{"Location":i} for i in tokens]
+    res = create_examples( queries,r,'Current',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
 
     # Future Weather Forecast
-    queries = ['tell me the future forecast of #tkn#','future forecast of #tkn#','future weather condition in #tkn#',
-               'next 3 days weather report of #tkn#','tommorrow weather condition at #tkn#',
-               'tommorow temperature at #tkn#','what would be the weather condition at #tkn# tommorrow?',
-               'give me the future forecast of #tkn#', 'upcomming weather changes of #tkn#',
-               "I need day after tommorrow's weather report for #tkn#", "why don't you give me the future weather forecast for #tkn#",
-               "future weather forecast of #tkn#"] 
-    res = create_examples( queries,tokens,'Future Weather Forecast',split=0.9 )
+    queries = ['tell me the future forecast of {Location}','future forecast of {Location}','future weather condition in {Location}',
+               'next 3 days weather report of {Location}','tommorrow weather condition at {Location}',
+               'tommorow temperature at {Location}','what would be the weather condition at {Location} tommorrow?',
+               'give me the future forecast of {Location}', 'upcomming weather changes of {Location}',
+               'Future Weather of {Location} on Friday', 'Future Weather of {Location} on Tuesday',
+               "I need day after tommorrow's weather report for {Location}", "why don't you give me the future weather forecast for {Location}",
+               "future weather forecast of {Location}"] 
+    res = create_examples( queries,r,'Future',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
 
     # Past Weather Forecast
-    queries = ['what is the weather condition at #tkn#', 'previous weather condition in #tkn#', 'past weather records of #tkn#',
-               'previous 3 days weather report of #tkn#','yesterday weather at #tkn#','yesterday temperature at #tkn#',
-               'yesterday humidity at #tkn#', 'Can you fetch me the past weather report of #tkn#',
-               'previous weather forecast of #tkn#', 'give me the details of previous weather condition at #tkn#',
+    queries = ['what is the weather condition at {Location}', 'previous weather condition in {Location}', 'past weather records of {Location}',
+               'yesterday weather at {Location}','yesterday temperature at {Location}',
+               'Past Weather of {Location} on Friday', 'Past Weather of {Location} on Tuesday',
+               'yesterday humidity at {Location}', 'Can you fetch me the past weather report of {Location}',
+               'previous weather forecast of {Location}', 'give me the details of previous weather condition at {Location}',
                ]
-    res = create_examples( queries,tokens,'Past Weather Forecast',split=0.9 )
+    res = create_examples( queries,r,'Past',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
 
     # Geo - location
-    queries = ['get the co ordinates of #tkn#', 'co-ords of #tkn#','latitude and longitude of #tkn#','location of #tkn#',
-               'geo location of #tkn#', 'I need the co-ords of #tkn#', 'where is #tkn# located?',
-               'I need the location of #tkn#', 'find the location of #tkn#', "#tkn# location?"]
-    res = create_examples( queries,tokens,'Geo Location',split=0.9 )
+    queries = ['get the co ordinates of {Location}', 'co-ords of {Location}','latitude and longitude of {Location}','location of {Location}',
+               'geo location of {Location}', 'I need the co-ords of {Location}', 'where is {Location} located?',
+               'I need the location of {Location}', 'find the location of {Location}', "{Location} location?"]
+    res = create_examples( queries,r,'GeoLocation',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
+
+    # Weather Report with date
+    # queries = ['Weather on {Date}','What is the weather at {Location} on {Date}','weather of {Location} for {Date}',
+    #            'Is the weather good on {Date}?','What will be the weather on {Date}']
 
     return dataset[0], dataset[1]

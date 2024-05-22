@@ -4,17 +4,13 @@ Ignoring the #name# like things as of now
 
 import csv, random
 
-def get_dataset(split = 0.9, limit =  None):
+def generate_dataset(split = 0.9):
     """ Generates the dataset """
     dataset = [[],[]]
     # Open dataset.csv and get it's contents (Not done yet)
     
     # Add Synthetic data generation
-    if not (limit and len(dataset) < limit):
-        res = synthetic_examples_dataset(split = split)
-        dataset[0].extend(res[0])
-        dataset[1].extend(res[1])
-    return dataset[0], dataset[1]
+    return synthetic_examples_dataset(split = split)
 
 def create_examples(prompts, responses, TAG = 'BasicChat', split= 0.9 ):
     """ Creates dataset for the given actions based on queries and tokens """

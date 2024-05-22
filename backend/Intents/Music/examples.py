@@ -1,8 +1,7 @@
 import random
 # from protocol_activator import protocol_map_str
 # from .actions import ActionMap
-ActionMap = {'PlayMusic':'none'}
-
+ActionMap = ['PlayMusic']
 IntentName = "Music"
 
 def generate_dataset(split = 0.9):
@@ -15,15 +14,15 @@ def generate_dataset(split = 0.9):
     # Add Synthetic data generation
     return generate_synthetic_dataset(split = split)
 
-def create_examples( queries,tokens,TAG, split = 0.9 ):
-    """ Creates dataset for the given actions based on queries and tokens """
-    if TAG not in ActionMap.keys():
-        print('The TAG name is not present')
+def create_examples( queries,SlotValues,TAG, split = 0.9 ):
+    """ Creates dataset for the given actions based on queries and Slot Values """
+    if TAG not in ActionMap:
+        print('This is not a valid TAG name')
         return
     dataset = []
     for q in queries:
-        for t in tokens:
-            dataset.append([q,f'{IntentName} {TAG}',{"Query":t}])
+        for sv in SlotValues:
+            dataset.append([q,f'{IntentName} {TAG}',sv])
     split_idx = int(len(dataset)*split)
     random.shuffle(dataset)
     return [dataset[:split_idx],dataset[split_idx:]]
@@ -49,7 +48,8 @@ def generate_synthetic_dataset(split = 0.9):
                  "Alisha Chinai", "The Weeknd", "Jagjit Singh", "Sia", "Mika Singh", "Charlie Puth", "Diljit Dosanjh", "Sam Smith", 
                  "Vishal Dadlani", "Marshmello", "Ankit Tiwari", "Queen", "Lucky Ali", "Halsey", "Hardy Sandhu", "John Legend", 
                  "Kailash Kher", "Demi Lovato", "Raftaar", "Twenty One Pilots"]
-    res = create_examples( queries,tokens,'PlayMusic',split=0.9 )
+    r = [{"Query":i} for i in tokens]
+    res = create_examples( queries,r,'PlayMusic',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
 
@@ -87,7 +87,8 @@ def generate_synthetic_dataset(split = 0.9):
         "I'm feeling like listening to some albums from {Query}", "Play some albums from {Query}", "Could you play some albums from {Query}",
         "Let's put on some albums from {Query}", "Play {Query} songs", "I want you to play the ablum {Query} songs"
     ]
-    res = create_examples( queries,tokens,'PlayMusic',split=0.9 )
+    r = [{"Query":i} for i in tokens]
+    res = create_examples( queries,r,'PlayMusic',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
 
@@ -109,10 +110,9 @@ def generate_synthetic_dataset(split = 0.9):
         "I'd love to listen to {Query}", "Why not play {Query}", "How about listening to {Query}", "Play some tunes from {Query}",
         "Let's hear {Query}", "I'm feeling like listening to {Query}", "play {Query} song", "start music with {Query} song",
     ]
-    res = create_examples( queries,tokens,'PlayMusic',split=0.9 )
+    r = [{"Query":i} for i in tokens]
+    res = create_examples( queries,r,'PlayMusic',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
 
     return dataset[0], dataset[1]
-
-print(generate_dataset()[0][:10])

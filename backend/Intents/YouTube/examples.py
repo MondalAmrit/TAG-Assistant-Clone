@@ -1,40 +1,41 @@
 # from protocol_activator import protocol_map_str
 import random
-intentMap = {'Youtube Search':1,}
+ActionMap = ['Search']
+IntentName = "YouTube"
 
-def get_dataset(split = 0.9, limit =  None):
+def generate_dataset(split = 0.9):
     """ Generates the dataset """
-    dataset = [[],[]]
+    #####################################
+    # Actually this is not a correct method coz .csv is not considered.
+    # But we can ignore it for now.
     # Open dataset.csv and get it's contents (Not done yet)
     
     # Add Synthetic data generation
-    if not (limit and len(dataset) < limit):
-        res = synthetic_examples_dataset(split = split)
-        dataset[0].extend(res[0])
-        dataset[1].extend(res[1])
-        
-    return dataset[0], dataset[1]
+    return generate_synthetic_dataset(split = split)
 
-def create_examples( queries,tokens,TAG, split = 0.9 ):
-    """ Creates dataset for the given actions based on queries and tokens """
+def create_examples( queries,SlotValues,TAG, split = 0.9 ):
+    """ Creates dataset for the given actions based on queries and Slot Values """
+    if TAG not in ActionMap:
+        print('This is not a valid TAG name')
+        return
     dataset = []
     for q in queries:
-        for t in tokens:
-            dataset.append([q.replace('#tkn#',t,1),TAG])
+        for sv in SlotValues:
+            dataset.append([q,f'{IntentName} {TAG}',sv])
     split_idx = int(len(dataset)*split)
     random.shuffle(dataset)
     return [dataset[:split_idx],dataset[split_idx:]]
 
-def synthetic_examples_dataset(split = 0.9):
+def generate_synthetic_dataset(split = 0.9):
     """ Write down you synthetic examples here """
     dataset = [[],[]]
     # Search prompts
-    queries = ["Why don't you search for #tkn# videos", "open #tkn# video in youtube", "Show me videos regarding #tkn#",
-               "search for videos related to #tkn#", "I need videos related to #tkn#", "videos realted to #tkn#",
-               "videos of #tkn#", "play #tkn# on youtube", "I think its better if you can search for #tkn# on YouTube",
-               "Show me the videos similar to #tkn#", "Youtube search about #tkn#", "online videos on #tkn#", "YT shorts of #tkn#",
-               "search any videos with tag #tkn#", "Youtube video about #tkn#","#tkn# videos","#tkn# youtube",
-                "YouTube #tkn#",'#tkn# in YouTube']
+    queries = ["Why don't you search for {Query} videos", "open {Query} video in youtube", "Show me videos regarding {Query}",
+               "search for videos related to {Query}", "I need videos related to {Query}", "videos realted to {Query}",
+               "videos of {Query}", "play {Query} on youtube", "I think its better if you can search for {Query} on YouTube",
+               "Show me the videos similar to {Query}", "Youtube search about {Query}", "online videos on {Query}", "YT shorts of {Query}",
+               "search any videos with tag {Query}", "Youtube video about {Query}","{Query} videos","{Query} youtube",
+                "YouTube {Query}",'{Query} in YouTube','hmm. ohk now lets search for {Query} in youtube']
     tokens = ['funny', 'jokes', 'python tutorials', 'java tutorials', 'c tutorials', 'breakfast', ' travel', 'vlogs',
               'Photography', "How to tie a tie", "Python tutorial", "Funny cat videos", "Healthy breakfast recipes", "Travel vlogs",
                "DIY home decor", "Latest movie trailers", "Workout routines", "Cake decorating ideas",
@@ -42,8 +43,8 @@ def synthetic_examples_dataset(split = 0.9):
                "Beginner's guide to cooking", "Learn a new language", "Home workout without equipment",
                "Productivity hacks", "Music theory basics", "Tech reviews", "Home gardening tips",
                "dsa courses"]
-    
-    res = create_examples( queries,tokens,'YouTube Search',split=0.9 )
+    r = [{"Query":i} for i in tokens]
+    res = create_examples( queries,r,'Search',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
 
