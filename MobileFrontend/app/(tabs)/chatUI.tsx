@@ -1,5 +1,7 @@
+import execute_command from '@/components/CommandExecutor';
 import React, { useState, useCallback } from 'react';
 import { View, TextInput, Pressable, ScrollView, Text, StyleSheet, useColorScheme } from 'react-native';
+
 
 interface Message {
   sender: 'user' | 'bot';
@@ -16,6 +18,10 @@ const ChatInterface: React.FC = () => {
 
     // Add user message to the chat
     setMessages([...messages, { sender: 'user', message: inputText }]);
+
+    // Execute the command.
+    execute_command(inputText);
+
     setInputText('');
 
     // Handle sending message to backend and bot's response here
