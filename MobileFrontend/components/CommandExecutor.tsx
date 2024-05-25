@@ -3,8 +3,10 @@ import { Alert, Linking, Platform } from 'react-native';
 
 /////////////////////////////////////////////////////
 // Better to add things :
-// 1. File Handling ...
+// 1. File Handling ... (File System)
 // 2. Torch control
+// 3. Clock Settings
+// 4. Bluetooth and Wifi
 
 const execute_command = async (cmd: string) => {
     let action: string = '';
