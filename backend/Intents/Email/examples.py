@@ -3,6 +3,7 @@ import csv, random
 ActionMap = ['ReadEmail', 'SendEmail', 'SearchEmail']
 IntentName = "Email"
 def generate_dataset(split = 0.9):
+    """ Creates dataset for the given actions based on queries and Slot Values """
     return generate_synthetic_dataset(split = split)
 def create_examples(queries, SlotValues, TAG, split = 0.9):
     """ Creates dataset for the given actions based on queries and Slot Values """
