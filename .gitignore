@@ -3,3 +3,5 @@
 __pycache__/
 
 VirtualEnv/
+
+node_modules/

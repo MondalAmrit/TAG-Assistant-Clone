@@ -1,7 +1,15 @@
 import execute_command from '@/components/CommandExecutor';
-import React, { useState, useCallback } from 'react';
-import { View, TextInput, Pressable, ScrollView, Text, StyleSheet, useColorScheme } from 'react-native';
+import React, { useState, useCallback, useEffect } from 'react';
+import { View, TextInput, Pressable, ScrollView, Text, StyleSheet, useColorScheme,Alert } from 'react-native';
+import { router } from 'expo-router';
 
+// ML Imports
+import * as Model from '@/components/GetModels';
+import * as onnx from 'onnxruntime-react-native';
+import * as bertTokenizer from '@/components/bert-tokenizer/tokenizers';
+import * as samplingTech from '@/components/getMultinomialSamples';
+import * as vocabJson from '@/assets/nova_tokenizer/tokenizer.json';
+import * as configJson from '@/assets/nova_tokenizer/tokenizer_config.json';
 
 interface Message {
   sender: 'user' | 'bot';
@@ -12,16 +20,65 @@ const ChatInterface: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState<string>('');
   const colorScheme = useColorScheme();
+  const seq_len: number = 128;
+  const vocab_size: number = 30523;
+  // ML state Managers
+  const [model, setModel] = useState<onnx.InferenceSession | null>(null); // State to hold the model
+  const tokenizer = new bertTokenizer.BertTokenizer(vocabJson, configJson);
 
-  const sendMessage = useCallback(() => {
+  // Load the GPT model when the component mounts
+  useEffect(() => {
+    const loadModel = async () => {
+      try {
+        const r = await Model.getGPTModel();
+        setMessages([...messages,{ sender: 'bot', message: 'Hi, How can I help you?'}])
+        setModel(r.model);
+      } catch (error) {
+        Alert.alert('Error in loading the Model');  router.replace('/');
+      }
+    };
+    loadModel(); // Call the function to load the model
+  }, []); // Empty dependency array ensures this effect runs only once, when the component mounts
+  
+  async function autoGenerateTokens(arr:number[], num_tokens: number): Promise<number[]> {
+    if (!model) {console.log("Either model or tokenizer is not present"); return [];}
+    let generatedTokens = [];
+  
+    for (let i = 0; i < num_tokens; i++) {
+      arr = arr.slice(-seq_len);  // Slice the array to the latest generation
+      let tens = new onnx.Tensor("int64", arr, [1,arr.length]);
+      let res = (await model.run({ "x": tens }))["logits"];
+      let [B, S, V] = res.dims;
+      let d = res.data.slice(((S - 1) * V), ((S) * V));
+      let sfRes = samplingTech.applySoftmax(Object.values(d));
+      let mltiNomRes = samplingTech.multinomial(sfRes);
+  
+      // Check if the generated token is the [SEP] token (102)
+      if (mltiNomRes[0] === 102) break;
+      
+      generatedTokens.push(mltiNomRes[0]);
+      arr.push(mltiNomRes[0])
+  
+    }
+  
+    return generatedTokens;
+  }
+
+  const sendMessage = useCallback(async () => {
     if (inputText.trim() === '') return;
 
     // Add user message to the chat
     setMessages([...messages, { sender: 'user', message: inputText }]);
+    if (!tokenizer || !model) {console.log("Something is wrong"); return ;}
+    let arr = tokenizer.encode('[CLS] ' + inputText + ' [QUES] ',null,{add_special_tokens:false}).slice(-seq_len);
+    if (arr.length < 1) return ;
+    let res = await autoGenerateTokens(arr, 100);
+    let ans = 'There is some internal error';
+    if (res.length > 0)  ans = tokenizer.decode(res);            
 
-    // Execute the command.
+    // Add user message to the chat
+    setMessages([...messages, { sender: 'bot', message: ans }]);
     execute_command(inputText);
-
     setInputText('');
 
     // Handle sending message to backend and bot's response here

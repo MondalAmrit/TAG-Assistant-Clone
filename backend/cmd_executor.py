@@ -1,4 +1,12 @@
-from Model.get_models import GPTmodel, BERTmodel, BERTSlotFilling
+import sys
+import os
+
+# Add the directory containing shared Python files to the module search path
+shared_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'Model'))
+sys.path.append(shared_dir)
+
+# This function is in the "/TAG-ASSISTANT-CLONE/Model/"
+from get_models import get_gpt, get_bert_classification, get_bert_slot_filling
 
 #####################################
 # Works like a CMD from chat UI
@@ -28,6 +36,10 @@ intentMapIdxtoVal = {0: 'Week Day',
  22: 'Battery',
  23: 'Current Time',
  24: 'Information'}
+
+GPTmodel = get_gpt()
+BERTmodel = get_bert_classification()
+BERTSlotFilling = get_bert_slot_filling()
 
 def check_cmd(query: str):
     # Check for calculation

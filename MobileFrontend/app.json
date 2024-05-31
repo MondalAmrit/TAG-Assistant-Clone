@@ -1,36 +1,79 @@
 {
   "expo": {
-    "name": "MobileFrontend",
+    "name": "NOVA",
     "slug": "MobileFrontend",
     "version": "1.0.0",
+    "jsEngine": "hermes",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/logo.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
     },
     "ios": {
       "supportsTablet": true
     },
+    "assetBundlePatterns": [
+      "**/*",
+      "assets/models/*"
+    ],
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/logo.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      // "jsEngine": "jsc",  // Default will be hermes engine
+      "package": "com.NOVA.Assistant"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/logo.png",
+      "resolver": {
+        "unstable_enablePackageExports": true
+      }
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "onnxruntime-react-native",
+      [
+        "expo-asset",
+        {
+          "assets": [
+            "./assets/models/",
+            "./assets/models/GPT_MODEL.with_runtime_opt.ort",
+            "./assets/images/logo.png",
+            "./assets/nova_tokenizer/",
+            "./assets/nova_tokenizer/tokenizer.json",
+            "./assets/nova_tokenizer/added_tokens.json",
+            "./assets/nova_tokenizer/special_tokens_map.json",
+            "./assets/nova_tokenizer/tokenizer_config.json",
+            "./assets/nova_tokenizer/vocab.json",
+            "./assets/nova_tokenizer/vocab.txt"
+
+          ]
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "7ae8bf65-37b3-4b57-9ff0-3bf2651d16cf"
+      },
+      "resolver": {
+        "unstable_enablePackageExports": true
+      }
     }
   }
 }
