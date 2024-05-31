@@ -1,2 +1,0 @@
-How is the weather today? , <INTENT> #PROTOCOL_CODE#  #current forecast# </INTENT><PARAMS></PARAMS>
-What is the weather at Rithala? , <INTENT> #PROTOCOL_CODE# #current forecast# </INTENT><PARAMS> Location=Rithala </PARAMS>
