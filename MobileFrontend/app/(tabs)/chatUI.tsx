@@ -12,13 +12,14 @@ import * as vocabJson from '@/assets/nova_tokenizer/tokenizer.json';
 import * as configJson from '@/assets/nova_tokenizer/tokenizer_config.json';
 
 interface Message {
-  sender: 'user' | 'bot';
+  sender: "user" | "bot";
   message: string;
 }
 
 const ChatInterface: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [inputText, setInputText] = useState<string>('');
+  const [inputText, setInputText] = useState<string>("");
+  const [isFirstMessage, setIsFirstMessage] = useState<boolean>(false);
   const colorScheme = useColorScheme();
   const seq_len: number = 128;
   const vocab_size: number = 30523;
@@ -84,27 +85,49 @@ const ChatInterface: React.FC = () => {
     // Handle sending message to backend and bot's response here
   }, [inputText, messages]);
 
-  const handleKeyPress = useCallback((event: any) => {
-    if (event.nativeEvent.key === 'Enter') {
-      sendMessage();
-    }
-  }, [sendMessage]);
+  const handleKeyPress = useCallback(
+    (event: any) => {
+      if (event.nativeEvent.key === "Enter") {
+        sendMessage();
+      }
+    },
+    [sendMessage]
+  );
 
   return (
-    <View style={[styles.container, { backgroundColor: colorScheme === 'dark' ? 'black' : 'white' }]}>
-      <ScrollView style={styles.chatContainer}>
-        {messages.map((msg, index) => (
-          <View
-            key={index}
-            style={[styles.messageContainer, msg.sender === 'user' ? styles.userMessage : styles.botMessage]}
-          >
-            <Text>{msg.message}</Text>
-          </View>
-        ))}
-      </ScrollView>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: colorScheme === "dark" ? "black" : "white" },
+      ]}
+    >
+      {isFirstMessage ? (
+        <ScrollView style={styles.chatContainer}>
+          {messages.map((msg, index) => (
+            <View
+              key={index}
+              style={[
+                styles.messageContainer,
+                msg.sender === "user" ? styles.userMessage : styles.botMessage,
+              ]}
+            >
+              <Text>{msg.message}</Text>
+            </View>
+          ))}
+        </ScrollView>
+      ) : (
+        <View style={styles.chatInfoContainer}>
+          <View style={styles.chatInfo}></View>
+          <View style={styles.chatInfo}></View>
+          <View style={styles.chatInfo}></View>
+        </View>
+      )}
       <View style={styles.inputContainer}>
         <TextInput
-          style={[styles.input, colorScheme === 'dark' ? { color: 'white' } : { color : 'black' }]} // Set text color based on color scheme
+          style={[
+            styles.input,
+            colorScheme === "dark" ? { color: "white" } : { color: "black" },
+          ]} // Set text color based on color scheme
           value={inputText}
           onChangeText={setInputText}
           placeholder="Type your message..."
@@ -119,15 +142,48 @@ const ChatInterface: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20 },
-  chatContainer: { flex: 1, marginBottom: 20, marginTop:30, },
-  messageContainer: { maxWidth: '80%', padding: 10, marginBottom: 10, borderRadius: 10 },
-  userMessage: { alignSelf: 'flex-end', backgroundColor: '#e0e0e0' },
-  botMessage: { alignSelf: 'flex-start', backgroundColor: '#aed581' },
-  inputContainer: { flexDirection: 'row', alignItems: 'center' },
-  input: {flex: 1,marginRight: 10,padding: 10,
-    borderWidth: 1,borderColor: '#ccc',borderRadius: 5,},
-  button: { padding: 10, backgroundColor: '#007BFF', borderRadius: 5 },
+  container: {
+    flex: 1,
+    padding: 20,
+    flexDirection: "column",
+    justifyContent: "space-between",
+  },
+  chatContainer: {
+    flex: 1,
+    marginBottom: 20,
+    marginTop: 30,
+  },
+  messageContainer: {
+    maxWidth: "80%",
+    padding: 10,
+    marginBottom: 10,
+    borderRadius: 10,
+  },
+  chatInfoContainer: {
+    flex: 0.95,
+    gap: 20,
+    flexDirection: "column",
+    justifyContent: "space-between",
+  },
+  chatInfo: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: "#fff",
+    borderRadius: 5,
+    backgroundColor: "transparent",
+  },
+  userMessage: { alignSelf: "flex-end", backgroundColor: "#e0e0e0" },
+  botMessage: { alignSelf: "flex-start", backgroundColor: "#aed581" },
+  inputContainer: { flexDirection: "row", alignItems: "center" },
+  input: {
+    flex: 1,
+    marginRight: 10,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+  },
+  button: { padding: 10, backgroundColor: "#007BFF", borderRadius: 5 },
 });
 
 export default ChatInterface;
