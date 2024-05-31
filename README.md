@@ -4,7 +4,7 @@
 
 # About NOVA
 An early Stage development of a new era of Assistants like JARVIS (or DUM-E).
-It's like ```AI Agents + Chat Focused + Small Models = TAG Model```
+It's like ```AI Agents + Chat Focused + Small Models = NOVA Model```
 
 # Mission
 To down stream the power of GEN AI to the low end devices with less space by creating a the infrastructure along with the supporting models and datasets

@@ -19,7 +19,7 @@ interface Message {
 const ChatInterface: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState<string>("");
-  const [isFirstMessage, setIsFirstMessage] = useState<boolean>(false);
+  const [isFirstMessage, setIsFirstMessage] = useState<boolean>(true);
   const colorScheme = useColorScheme();
   const seq_len: number = 128;
   const vocab_size: number = 30523;
@@ -42,7 +42,10 @@ const ChatInterface: React.FC = () => {
   }, []); // Empty dependency array ensures this effect runs only once, when the component mounts
   
   async function autoGenerateTokens(arr:number[], num_tokens: number): Promise<number[]> {
-    if (!model) {console.log("Either model or tokenizer is not present"); return [];}
+    if (!model || !tokenizer) {
+      if (!tokenizer) console.log("Tokenizer not present");
+      else console.log("Model not present");
+      console.log("Either model or tokenizer is not present"); return [];}
     let generatedTokens = [];
   
     for (let i = 0; i < num_tokens; i++) {
@@ -69,30 +72,24 @@ const ChatInterface: React.FC = () => {
     if (inputText.trim() === '') return;
 
     // Add user message to the chat
-    setMessages([...messages, { sender: 'user', message: inputText }]);
-    if (!tokenizer || !model) {console.log("Something is wrong"); return ;}
+    setMessages((prevMessages) => [...prevMessages, { sender: 'user', message: inputText }]);
+    if (!tokenizer || !model) {
+      if (!tokenizer) console.log("Tokenizer not present");
+      else console.log("Model not present");
+      console.log("Something is wrong"); return ;}
     let arr = tokenizer.encode('[CLS] ' + inputText + ' [QUES] ',null,{add_special_tokens:false}).slice(-seq_len);
     if (arr.length < 1) return ;
     let res = await autoGenerateTokens(arr, 100);
     let ans = 'There is some internal error';
     if (res.length > 0)  ans = tokenizer.decode(res);            
 
-    // Add user message to the chat
-    setMessages([...messages, { sender: 'bot', message: ans }]);
+    // Add bot message to the chat
+    setMessages((prevMessages) => [...prevMessages, { sender: 'bot', message: ans }]);
     execute_command(inputText);
     setInputText('');
 
     // Handle sending message to backend and bot's response here
   }, [inputText, messages]);
-
-  const handleKeyPress = useCallback(
-    (event: any) => {
-      if (event.nativeEvent.key === "Enter") {
-        sendMessage();
-      }
-    },
-    [sendMessage]
-  );
 
   return (
     <View
@@ -131,7 +128,6 @@ const ChatInterface: React.FC = () => {
           value={inputText}
           onChangeText={setInputText}
           placeholder="Type your message..."
-          onKeyPress={handleKeyPress} // Call handleKeyPress function on key press
         />
         <Pressable onPress={sendMessage} style={styles.button}>
           <Text>Send</Text>

@@ -56,7 +56,8 @@ const HomePage: React.FC = () => {
 
     if (!hasEmptyRequiredOption) {
       console.log("Proceeding to next page...");
-      router.replace("/privacyPolicy");
+      // router.replace("/privacyPolicy");
+      router.push('/chatUI');
     } else {
       console.log("Please fill in the required fields.");
     }
