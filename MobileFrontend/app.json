@@ -46,17 +46,10 @@
         "expo-asset",
         {
           "assets": [
-            "./assets/models/",
             "./assets/models/GPT_MODEL.with_runtime_opt.ort",
             "./assets/images/logo.png",
-            "./assets/nova_tokenizer/",
             "./assets/nova_tokenizer/tokenizer.json",
-            "./assets/nova_tokenizer/added_tokens.json",
-            "./assets/nova_tokenizer/special_tokens_map.json",
-            "./assets/nova_tokenizer/tokenizer_config.json",
-            "./assets/nova_tokenizer/vocab.json",
-            "./assets/nova_tokenizer/vocab.txt"
-
+            "./assets/nova_tokenizer/tokenizer_config.json"
           ]
         }
       ]

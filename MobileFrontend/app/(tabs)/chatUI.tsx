@@ -1,7 +1,8 @@
 import execute_command from '@/components/CommandExecutor';
 import React, { useState, useCallback, useEffect } from 'react';
-import { View, TextInput, Pressable, ScrollView, Text, StyleSheet, useColorScheme,Alert } from 'react-native';
+import { View, TextInput, Pressable, ScrollView, Text, StyleSheet, useColorScheme, Alert, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
+import Voice from "@react-native-voice/voice"
 
 // ML Imports
 import * as Model from '@/components/GetModels';
@@ -20,6 +21,38 @@ const ChatInterface: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState<string>("");
   const [isFirstMessage, setIsFirstMessage] = useState<boolean>(true);
+
+  // Voice states
+  const [result, setResult] = useState<string>("");
+  const [error, setError] = useState<any>({});
+  const [isRecording, setIsRecording] = useState<boolean>(false);
+
+  Voice.onSpeechStart = () => setIsRecording(true);
+  Voice.onSpeechEnd = () => setIsRecording(false);
+  Voice.onSpeechError = (err) => setError(err.error);
+  Voice.onSpeechResults = (res) => {
+    let v = res.value[0];
+    setInputText(v);
+  }
+
+  const startRecording = async () => {
+    try {
+      await Voice.start("en-US");
+      setIsRecording(true);
+    } catch (e) {
+      setError(e);
+    }
+  }
+
+  const stopRecording = async () => {
+    try { 
+      await Voice.stop();
+      setIsRecording(false);
+    } catch (e) {
+      setError(e);
+    }
+  }
+
   const colorScheme = useColorScheme();
   const seq_len: number = 128;
   const vocab_size: number = 30523;
@@ -92,49 +125,55 @@ const ChatInterface: React.FC = () => {
   }, [inputText, messages]);
 
   return (
-    <View
-      style={[
-        styles.container,
-        { backgroundColor: colorScheme === "dark" ? "black" : "white" },
-      ]}
-    >
-      {isFirstMessage ? (
-        <ScrollView style={styles.chatContainer}>
-          {messages.map((msg, index) => (
-            <View
-              key={index}
-              style={[
-                styles.messageContainer,
-                msg.sender === "user" ? styles.userMessage : styles.botMessage,
-              ]}
-            >
-              <Text>{msg.message}</Text>
-            </View>
-          ))}
-        </ScrollView>
-      ) : (
-        <View style={styles.chatInfoContainer}>
-          <View style={styles.chatInfo}></View>
-          <View style={styles.chatInfo}></View>
-          <View style={styles.chatInfo}></View>
-        </View>
-      )}
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={[
-            styles.input,
-            colorScheme === "dark" ? { color: "white" } : { color: "black" },
-          ]} // Set text color based on color scheme
-          value={inputText}
-          onChangeText={setInputText}
-          placeholder="Type your message..."
-        />
-        <Pressable onPress={sendMessage} style={styles.button}>
-          <Text>Send</Text>
-        </Pressable>
-      </View>
-    </View>
-  );
+		<View
+			style={[
+				styles.container,
+				{ backgroundColor: colorScheme === "dark" ? "black" : "white" },
+			]}
+		>
+			{isFirstMessage ? (
+				<ScrollView style={styles.chatContainer}>
+					{messages.map((msg, index) => (
+						<View
+							key={index}
+							style={[
+								styles.messageContainer,
+								msg.sender === "user" ? styles.userMessage : styles.botMessage,
+							]}
+						>
+							<Text>{msg.message}</Text>
+						</View>
+					))}
+				</ScrollView>
+			) : (
+				<View style={styles.chatInfoContainer}>
+					<View style={styles.chatInfo}></View>
+					<View style={styles.chatInfo}></View>
+					<View style={styles.chatInfo}></View>
+				</View>
+			)}
+			<View style={styles.inputContainer}>
+				<TextInput
+					style={[
+						styles.input,
+						colorScheme === "dark" ? { color: "white" } : { color: "black" },
+					]} // Set text color based on color scheme
+					value={inputText}
+					onChangeText={setInputText}
+					placeholder="Type your message..."
+				/>
+				<TouchableOpacity
+					onPress={isRecording ? stopRecording : startRecording}
+					style={(styles.button)}
+				>
+					<Text>{isRecording ? "Stop" : "Start"}</Text>
+				</TouchableOpacity>
+				<Pressable onPress={sendMessage} style={styles.button}>
+					<Text>Send</Text>
+				</Pressable>
+			</View>
+		</View>
+	);
 };
 
 const styles = StyleSheet.create({
