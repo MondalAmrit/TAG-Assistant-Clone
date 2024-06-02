@@ -35,4 +35,4 @@ To evaluate the real use case of the idea and to find out whether the problem th
 ## Additional Implementations
  - [ ] Voice Assistance (Speech to text only Via Online APIs)
  - [ ] User History Management
- - [ ] Dashboard (Featuring the Latest News ? or remainders ? or something else)
+ - [ ] Dashboard (Featuring the Latest News ? or remainders ? or something else) (Slider)
