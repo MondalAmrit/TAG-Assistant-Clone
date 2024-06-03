@@ -2,7 +2,7 @@ import csv, re, random
 # from protocol_activator import protocol_map_str
 
 IntentName = "Internet"
-ActionMap = ["Information","Open Website","Image Search","Product Search",]
+ActionMap = ["Information","Open Website","Image Search","Product Search","Google Meet"]
 
 def generate_dataset(split = 0.9):
     """ Generates the dataset """
@@ -72,7 +72,8 @@ def synthetic_examples_dataset(split = 0.9):
                 "Open {Query} in a browser", "Quickly open the {Query}"]
     tokens = ['leetcode', 'linkedin', 'amazon', 'github', 'google', 'gmail', 'geeksforgeeks', 'stackoverflow', 'netflix', 'codechef',
                 'youtube', 'facebook', 'twitter', 'instagram', 'wikipedia', 'reddit', 'quora', 'ebay', 'microsoft', 'apple',
-                'spotify', 'bbc', 'cnn', 'nytimes', 'yahoo', 'bing', 'wordpress', 'pinterest', 'dropbox', 'twitch']
+                'spotify', 'bbc', 'cnn', 'nytimes', 'yahoo', 'bing', 'wordpress', 'pinterest', 'dropbox', 'twitch',
+                'timesofindia']
     r = [{"Query":i} for i in tokens]
     res = create_examples( queries,r,'Open Website',split=0.9 )
     dataset[0].extend(res[0])
@@ -118,4 +119,13 @@ def synthetic_examples_dataset(split = 0.9):
     res = create_examples( queries,r,'Product Search',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
-    return dataset[0], dataset[1]
+
+    # Google Meet
+    queries = ["Open the google meet", "create a new meeting","join a new meeting",
+               "new meet","get the a new meeting","I need a google meet","create a meet link"]
+    tokens = [{}]
+    res = create_examples( queries,r,'Google Meet',split=0.9 )
+    dataset[0].extend(res[0])
+    dataset[1].extend(res[1])
+
+    return dataset

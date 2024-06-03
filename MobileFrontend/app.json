@@ -28,8 +28,14 @@
         "foregroundImage": "./assets/images/logo.png",
         "backgroundColor": "#ffffff"
       },
-      // "jsEngine": "jsc",  // Default will be hermes engine
-      "package": "com.NOVA.Assistant"
+      "package": "com.NOVA.Assistant",
+      "permissions": [
+        "BLUETOOTH",
+        "BLUETOOTH_CONNECT",
+        "BLUETOOTH_SCAN",
+        "android.permission.BLUETOOTH_ADMIN",
+        "android.permission.BLUETOOTH_CONNECT"
+      ]
     },
     "web": {
       "bundler": "metro",

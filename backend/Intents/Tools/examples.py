@@ -1,7 +1,9 @@
 import csv, random
 
-ActionMap = ['SetAlarm', 'StopAlarm', 'StartStopwatch', 'StopStopwatch', 'SetTimer', 'StopTimer', 'ShowCompass', 'TurnOnTorch', 'TurnOffTorch']
-IntentName = "Tool"
+ActionMap = ['SetAlarm', 'StopAlarm', 'StartStopwatch', 'StopStopwatch', 'SetTimer', 
+             'StopTimer', 'ShowCompass', 'TurnOnTorch', 'TurnOffTorch','SetRemainders',
+             'GetRemainders', 'SetStopwatch']
+IntentName = "Tools"
 
 def generate_dataset(split=0.9):
     """Generates the dataset"""
@@ -18,7 +20,7 @@ def create_examples(queries, SlotValues, TAG, split=0.9):
             dataset.append([q,f'{IntentName} {TAG}',sv])
     split_idx = int(len(dataset) * split)
     random.shuffle(dataset)
-    return [dataset[:split_idx], dataset[split_idx:]]
+    return dataset[:split_idx], dataset[split_idx:]
 
 def generate_synthetic_dataset(split=0.9):
     """Write down your synthetic examples here"""
@@ -123,6 +125,75 @@ def generate_synthetic_dataset(split=0.9):
     ]
     r = [{}]
     res = create_examples(queries, r, 'TurnOffTorch', split=0.9)
+    dataset[0].extend(res[0])
+    dataset[1].extend(res[1])
+
+    # Set Remainders
+    queries = ["Set a remainder on {Date} as {Query}", "New remainder for {Date} as {Query}"]
+    tokens = []
+    dates = ("Thursday","Friday","Sunday","Monday","Wednesday","13th,April,2024","23rd,May,2023",
+              "15/03/2025","23/07/2029","22/06/25","13 th", "13 July 2023")
+    for i in dates:
+        for j in ("Important","Office","Webinar","Seminar","Urgent Meeting",
+                  "GD for company progress", "Interview"):
+            tokens.append({"Date":i,"Query":j})
+    res = create_examples( queries,tokens,'SetRemainders',split=0.9 )
+    dataset[0].extend(res[0])
+    dataset[1].extend(res[1])
+    queries = ["New remainder at {Date}", "A remainder on {Date}"]
+    tokens = [{"Date":i} for i in dates]
+    res = create_examples( queries,tokens,'SetRemainders',split=0.9 )
+    dataset[0].extend(res[0])
+    dataset[1].extend(res[1])
+    queries = ["Create a new reaminder", "I need a new reaminder"]
+    tokens = [{}]
+    res = create_examples( queries,tokens,'SetRemainders',split=0.9 )
+    dataset[0].extend(res[0])
+    dataset[1].extend(res[1])
+
+    # Get Remainders
+    queries = ["Get the reaminders","Show me the remainders","what are the latest remainders?"]
+    res = create_examples( queries,tokens,'GetRemainders',split=0.9 )
+    dataset[0].extend(res[0])
+    dataset[1].extend(res[1])
+
+    queries = ["Any remainders on {Date}", "remainder at {Date}", "I need all reaminders at {Date}"]
+    tokens = [{"Date":i} for i in dates]
+    res = create_examples( queries,tokens,'GetRemainders',split=0.9 )
+    dataset[0].extend(res[0])
+    dataset[1].extend(res[1])
+
+    # Set Alarm
+    queries = ["set an alarm for {Time}", "new alarm at {Time}"]
+    times = ("12:50","15:30","23:11 PM","24:00 AM", "12:00 PM", "08:23 AM")
+    times_2 = ("10 secs", "23 min", "42 minutes", "2 hrs", "1hrs", "3 hours", "120 seconds",
+               "5 minutes", "12 minutes", "10 minutes")
+    tokens = [{"Time":i} for i in times + times_2]
+    res = create_examples( queries,tokens,'SetAlarm',split=0.9 )
+    dataset[0].extend(res[0])
+    dataset[1].extend(res[1])
+
+    # Stop Alarm
+    queries = ["Stop alarm at {Time}", "Don't ring alarm at {Time}",
+               "I dont need alarm at {Time}"]
+    tokens = [{"Time":i} for i in times]
+    res = create_examples( queries,tokens,'StopAlarm',split=0.9 )
+    dataset[0].extend(res[0])
+    dataset[1].extend(res[1])
+    
+    # Set StopWatch
+    queries = ["set stopwatch for {Time}", "Stopwatch for {Time}",
+               "lets start the stopwatch till {Time}"]
+    tokens = [{"Time":i} for i in times_2]
+    res = create_examples( queries,tokens,'SetStopwatch',split=0.9 )
+    dataset[0].extend(res[0])
+    dataset[1].extend(res[1])
+
+    # Set Timer
+    queries = ["set a timer for {Time}", "Set a new timer till {Time}",
+               "Why dont you create a timer for {Time}", "lets start a timer for {Time}"]
+    tokens = [{"Time":i} for i in times_2]
+    res = create_examples( queries,tokens,'SetTimer',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
 

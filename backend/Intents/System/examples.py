@@ -7,7 +7,8 @@ intentMap = {
     'Battery': 4,
     'Datetime':5,
 }
-ActionMap = ['Volume','Brightness','Shutdown','Sleep','Restart','Logout','Battery','Datetime']
+ActionMap = ['Volume','Brightness','Shutdown','Sleep','Restart','Logout','Battery','Datetime','Downloads',
+             'Settings']
 IntentName = "System"
 
 def generate_dataset(split = 0.9):
@@ -206,6 +207,24 @@ def generate_synthetic_dataset(split = 0.9):
         "Show the system year", "Check system year", "Year information",
         "Current system year", "Check current year", "Is this year 2024?"]    
     res = create_examples( queries,tokens,'Datetime',split=0.9 )
+    dataset[0].extend(res[0])
+    dataset[1].extend(res[1])
+
+    #######################
+    # Mobile Focused
+    # Settings
+    queries = ["Open settings", "I want you to open the settings",
+               "mobile settings", "why don't you open the mobile settings",
+               "lets change the settings of mbile","show me the device settings"]
+    tokens = [{}]  
+    res = create_examples( queries,tokens,'Settings',split=0.9 )
+    dataset[0].extend(res[0])
+    dataset[1].extend(res[1])
+
+    # Downloads
+    queries = ["show the downloads", "open downloads", "I think it would be better if you open the downloads",
+               "What are the latest downloads?","downloads seems to be a bit unusual. Open it"]
+    res = create_examples( queries,tokens,'Downloads',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
 

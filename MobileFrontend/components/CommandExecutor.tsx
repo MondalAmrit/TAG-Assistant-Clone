@@ -1,5 +1,5 @@
 import { Alert, Linking, Platform } from 'react-native';
-
+import { PermissionsAndroid } from 'react-native';
 
 /////////////////////////////////////////////////////
 // Better to add things :
@@ -38,7 +38,13 @@ const execute_command = async (cmd: string) => {
     else if (cmd === 'settings') {action = 'android.settings.SETTINGS';}
     else if (cmd === 'downloads') {action = 'android.intent.action.VIEW_DOWNLOADS';}
     else if (cmd === 'bluetooth') {
-        // action = 'android.bluetooth.adapter.action.REQUEST_ENABLE';
+        if (Platform.OS === "android") {
+            if (await PermissionsAndroid.requestMultiple([
+                'android.permission.READ_CONTACTS',
+                "android.permission.BLUETOOTH_SCAN", "android.permission.BLUETOOTH_CONNECT"
+            ]))
+            action = 'android.bluetooth.adapter.action.REQUEST_ENABLE';
+        }
     }
     try {
         if (action !== '')  {

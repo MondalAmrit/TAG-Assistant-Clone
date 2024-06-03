@@ -26,17 +26,17 @@ def generate_synthetic_dataset(split=0.9):
 
     # ConvertFile
     queries = [
-        "Convert {FileType} to {TargetType}", "Please convert {FileType} to {TargetType}", 
-        "Can you convert {FileType} to {TargetType}", "Convert my {FileType} to {TargetType}", 
-        "Change {FileType} to {TargetType}", "Transform {FileType} to {TargetType}", 
-        "I need to convert {FileType} to {TargetType}", "Please change {FileType} to {TargetType}", 
-        "Convert this {FileType} file to {TargetType}", "Can you change {FileType} to {TargetType}"
+        "Convert {Query_1} to {Query_2}", "Please convert {Query_1} to {Query_2}", 
+        "Can you convert {Query_1} to {Query_2}", "Convert my {Query_1} to {Query_2}", 
+        "Change {Query_1} to {Query_2}", "Transform {Query_1} to {Query_2}", 
+        "I need to convert {Query_1} to {Query_2}", "Please change {Query_1} to {Query_2}", 
+        "Convert this {Query_1} file to {Query_2}", "Can you change {Query_1} to {Query_2}"
     ]
     
     file_types = ["Word document", "Excel spreadsheet", "PDF", "PNG image", "JPEG image", "PowerPoint slide"]
     target_types = ["PDF", "Word document", "Excel spreadsheet", "PNG image", "JPEG image", "PowerPoint slide"]
     
-    r = [{"FileType": ft, "TargetType": tt} for ft in file_types for tt in target_types if ft != tt]
+    r = [{"Query_1": ft, "Query_2": tt} for ft in file_types for tt in target_types if ft != tt]
     res = create_examples(queries, r, 'ConvertFile', split=0.9)
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])

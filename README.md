@@ -43,6 +43,7 @@ Based on the user prompts the Ai will decide the response along with the protoco
 # Installation and Usage
 For Installation setup refer [here](docs/installation.md) <br />
 For Usage setup refer [here](docs/usage.md) <br />
+For Installation of MobileFrontend refer [here](docs/mobile_setup.md) <br />
 **Note:** Installation is a one time setup and usage is to be done on every activation.
 
 # How can I contribute?

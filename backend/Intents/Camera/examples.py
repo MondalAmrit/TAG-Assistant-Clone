@@ -48,3 +48,5 @@ def generate_synthetic_dataset(split = 0.9):
     res = create_examples( queries,tokens,'Video',split=0.9 )
     dataset[0].extend(res[0])
     dataset[1].extend(res[1])
+
+    return dataset

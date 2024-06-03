@@ -31,7 +31,7 @@ const ChatInterface: React.FC = () => {
   Voice.onSpeechEnd = () => setIsRecording(false);
   Voice.onSpeechError = (err) => setError(err.error);
   Voice.onSpeechResults = (res) => {
-    let v = res.value[0];
+    let v = res.value ? res.value[0] : "";
     setInputText(v);
   }
 
@@ -118,7 +118,7 @@ const ChatInterface: React.FC = () => {
 
     // Add bot message to the chat
     setMessages((prevMessages) => [...prevMessages, { sender: 'bot', message: ans }]);
-    execute_command(inputText);
+    execute_command(inputText.toLowerCase());
     setInputText('');
 
     // Handle sending message to backend and bot's response here

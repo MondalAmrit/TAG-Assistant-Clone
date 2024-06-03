@@ -3,16 +3,28 @@ from transformers import BertTokenizerFast
 # os.chdir('C://Users/Anirudh/Desktop/Startup/TAG-Assistant-Clone')
 print(os.listdir())
 
+from backend.Intents.Call.examples import generate_dataset as call_examples
+from backend.Intents.Camera.examples import generate_dataset as camera_examples
 from backend.Intents.Chat.examples import generate_dataset as chat_examples
-from backend.Intents.Weather.examples import generate_dataset as weather_examples
+from backend.Intents.Email.examples import generate_dataset as email_examples
+from backend.Intents.FileConverter.examples import generate_dataset as file_converter_examples
 # from backend.Intents.GIT.examples import generate_dataset as git_examples
 from backend.Intents.Internet.examples import generate_dataset as internet_examples
 from backend.Intents.Music.examples import generate_dataset as music_examples
-from backend.Intents.YouTube.examples import generate_dataset as youtube_examples
-from backend.Intents.System.examples import generate_dataset as system_examples
+from backend.Intents.News.examples import generate_dataset as news_examples
 from backend.Intents.Notes.examples import generate_dataset as notes_examples
+from backend.Intents.Tools.examples import generate_dataset as tools_examples
+from backend.Intents.System.examples import generate_dataset as system_examples
+from backend.Intents.Weather.examples import generate_dataset as weather_examples
+from backend.Intents.YouTube.examples import generate_dataset as youtube_examples
 
 import pprint, csv
+
+
+# Get the datasets for the slot filling
+data_list = [ weather_examples(), notes_examples(), call_examples(), camera_examples(),
+             internet_examples(), music_examples(), youtube_examples(), system_examples(),
+             email_examples(), file_converter_examples(), news_examples(), tools_examples()]
 
 # Define the Slot labels
 slot_labels = {
@@ -75,12 +87,11 @@ def slot_filling_data(sentence, intentClass, slot_tokens):
              raise 'Error occured here'
         return [sentence, intentClass, " ".join(res)]
 
-
-# Get the datasets for the slot filling
-data_list = [ weather_examples(), notes_examples(),
-             internet_examples(), music_examples(), youtube_examples(), system_examples()]
 dataset = {'train':[],'val':[]}
+count = 0
 for i in data_list:
+    print(count)
+    count += 1
     for j in ('train','val'):
         ds = []
         for k in i[0 if j=='train' else 1]:
